@@ -39,8 +39,8 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
         String method = req.method;
         String className = req.className;
-        Class implClass = BeanFactory.getObj(className);
-        Method invokeMethod = implClass.getMethod(method, argType);
+        Object implClass = BeanFactory.getObj(className);
+        Method invokeMethod = implClass.getClass().getMethod(method, argType);
 
         try {
             ctx.writeAndFlush(invokeMethod.invoke(implClass,args));

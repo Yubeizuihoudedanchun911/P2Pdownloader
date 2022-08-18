@@ -4,6 +4,7 @@ import com.api.DownLoadService;
 import com.api.impl.DownLoadServiceimpl;
 import com.codec.FileDecoder;
 import com.codec.FileEncoder;
+import com.factory.BeanFactory;
 import com.handler.NettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -25,7 +26,7 @@ import java.util.Map;
 
 public class NettyServer {
     private int port;
-    private  static Map<String,String> map ;
+    private static BeanFactory beanFactory;
 
     public NettyServer(int port) {
         this.port = port;
@@ -33,12 +34,11 @@ public class NettyServer {
     }
 
     public void init(){
-        map = new HashMap<>();
-        map.put(DownLoadService.class.toString(), DownLoadServiceimpl.class.toString());
+        beanFactory = new BeanFactory();
+        beanFactory.regist(DownLoadService.class.getName(), DownLoadServiceimpl.class);
     }
 
     public void run(){
-        init();
         EventLoopGroup parent = new NioEventLoopGroup(1);
         EventLoopGroup children = new NioEventLoopGroup();
 

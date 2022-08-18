@@ -19,13 +19,13 @@ public class BeanFactory {
      * @return a InterfaceImpl Obj
      *
      */
-    public static Class getObj(String key) throws InstantiationException, IllegalAccessException {
+    public static Object getObj(String key) throws InstantiationException, IllegalAccessException {
         Class<?> value = map.get(key);
         if(value==null){
             throw new NullPointerException("no such class recorded");
         }else {
 
-            return value;
+            return value.newInstance();
 
         }
     }
