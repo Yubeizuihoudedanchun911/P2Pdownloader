@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 public class DownLoadManager {
-    public final static long SLICE_SIZE = 2<<17;
+    public final static long SLICE_SIZE = 1<<20;
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
     public static long getTotalSize(String downloadUrl){

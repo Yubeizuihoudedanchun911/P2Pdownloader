@@ -13,7 +13,7 @@ public class FileEncoder extends MessageToByteEncoder<File>{
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, File file, ByteBuf byteBuf) throws Exception {
         FileChannel fileChannel = new  FileInputStream(file).getChannel();
-        ByteBuffer buffer = ByteBuffer.allocateDirect(2<<20);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1<<20);
         int byteNum = fileChannel.read(buffer);
         while(byteNum!=-1){
             buffer.flip();

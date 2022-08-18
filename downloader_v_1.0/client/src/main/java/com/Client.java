@@ -66,20 +66,15 @@ public class Client {
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_BROADCAST, true)
+                .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(65535))
                 .handler(
                         new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel ch) throws Exception {
                                 ChannelPipeline pipeline = ch.pipeline();
-                                pipeline.addLast(client)
-                                        .addLast(new FileDecoder())
-                                        .addLast("encode", new ObjectEncoder())
-                                        .addLast("decode", new ObjectDecoder(ClassResolvers.cacheDisabled(this
-                                                .getClass().getClassLoader())));
-//                                        .addLast("decoder", new StringDecoder())
-//                                        //向pipeline加入编码器
-//                                        .addLast("encoder", new StringEncoder());
-
+                                pipeline.addLast(new FileDecoder())
+                                        .addLast(client);
                             }
                         }
                 );

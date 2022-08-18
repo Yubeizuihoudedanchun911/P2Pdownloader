@@ -7,10 +7,7 @@ import com.codec.FileEncoder;
 import com.factory.BeanFactory;
 import com.handler.NettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -47,6 +44,8 @@ public class NettyServer {
             bootstrap.group(parent,children)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG,128)
+                    .option(ChannelOption.SO_BROADCAST, true)
+                    .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(65535))
                     .childOption(ChannelOption.SO_KEEPALIVE,true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
@@ -55,10 +54,10 @@ public class NettyServer {
 //                                    .addLast(new HttpServerCodec())
 //                                    .addLast(new FileDecoder())
                                     .addLast(new FileEncoder())
-                                    .addLast(new NettyServerHandler())
-                                    .addLast("encode", new ObjectEncoder())
-                                    .addLast("decode", new ObjectDecoder(ClassResolvers.cacheDisabled(this
-                                            .getClass().getClassLoader())));
+                                    .addLast(new NettyServerHandler());
+//                                    .addLast("encode", new ObjectEncoder())
+//                                    .addLast("decode", new ObjectDecoder(ClassResolvers.cacheDisabled(this
+//                                            .getClass().getClassLoader())));
 //                                    .addLast("decoder", new StringDecoder())
 //                            //向pipeline加入编码器
 //                                    .addLast("encoder", new StringEncoder());
