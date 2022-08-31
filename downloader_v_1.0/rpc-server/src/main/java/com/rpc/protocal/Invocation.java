@@ -1,4 +1,4 @@
-package com.protoc;
+package com.rpc.protocal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

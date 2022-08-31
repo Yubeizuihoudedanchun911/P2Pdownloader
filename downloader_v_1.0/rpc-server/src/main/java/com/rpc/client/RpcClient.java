@@ -1,9 +1,9 @@
-package com;
+package com.rpc.client;
+
 
 import com.rpc.codec.FileDecoder;
-
 import com.rpc.handler.CilentHandler;
-import com.protoc.Invocation;
+import com.rpc.protocal.Invocation;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,16 +16,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Data
-public class Client {
+public class RpcClient {
 
     //创建线程池
     private static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private static int port;
     private static CilentHandler client;
     private  static ChannelFuture cf;
+    private  static Bootstrap bootstrap;
 
-    public Client(int port) {
-        this.port = port;
+    public RpcClient() {
         initClient();
     }
 
@@ -73,10 +72,15 @@ public class Client {
                         }
                 );
 
+
+    }
+
+    public ChannelFuture connect(String addrss , int port){
         try {
-            bootstrap.connect("127.0.0.1", port).sync();
+            ChannelFuture cf  = bootstrap.connect("127.0.0.1", port).sync();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return cf;
     }
 }

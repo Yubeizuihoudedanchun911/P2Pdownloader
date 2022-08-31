@@ -13,11 +13,14 @@ public class MyServerInitializer extends ChannelInitializer<SocketChannel> {
 
         //入站的handler进行解码 MyByteToLongDecoder
         //pipeline.addLast(new MyByteToLongDecoder());
+        pipeline.addLast(new StringDecoder());
         pipeline.addLast(new MyByteToLongDecoder2());
+
         //出站的handler进行编码
         pipeline.addLast(new MyLongToByteEncoder());
+        pipeline.addLast(new StringEncoder());
         //自定义的handler 处理业务逻辑
         pipeline.addLast(new MyServerHandler());
-        System.out.println("xx");
+        pipeline.addLast(new StringHandler());
     }
 }
