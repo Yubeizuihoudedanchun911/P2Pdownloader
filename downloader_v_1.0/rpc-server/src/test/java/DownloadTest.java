@@ -1,5 +1,4 @@
 import com.alibaba.fastjson.JSON;
-import com.download.impl.DownLoadServiceimpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -7,11 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class DownloadTest {
-    @Test
-    public void test(){
-      new DownLoadServiceimpl().download("https://www.baidu.com/img/flexible/logo/pc/result.png");
-    }
-
     public static ResponseEntity<byte[]> getFileContentByUrlAndPosition(String downloadUrl, long start, long end) {
         final RestTemplate REST_TEMPLATE = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -34,4 +28,6 @@ public class DownloadTest {
         System.out.println(s1);
 
     }
+
+
 }

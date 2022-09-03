@@ -2,7 +2,7 @@ package com.rpc.handler;
 
 
 import com.rpc.factory.BeanFactory;
-import com.rpc.factory.GsonParser;
+import com.rpc.factory.RequstParser;
 import com.rpc.protocal.Invocation;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -27,7 +27,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IOException, ClassNotFoundException {
         System.out.println("read");
 
-        Invocation req = GsonParser.parse(msg);;
+        Invocation req = RequstParser.parse(msg);;
         Object[] args = req.args;
         String[] stringType = req.argType;
         Class<?>[] argType = new Class[stringType.length];

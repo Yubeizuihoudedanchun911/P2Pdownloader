@@ -1,4 +1,4 @@
-package com.download.manage;
+package com.api.download.manage;
 
 import lombok.Data;
 

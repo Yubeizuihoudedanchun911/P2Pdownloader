@@ -1,10 +1,9 @@
 package com.rpc.server;
 
-import com.download.DownLoadService;
-import com.download.impl.DownLoadServiceimpl;
-import com.rpc.codec.FileEncoder;
+import com.rpc.codec.RequstDecoder;
+import com.rpc.codec.RequstEncoder;
 import com.rpc.factory.BeanFactory;
-import com.rpc.handler.NettyServerHandler;
+import com.rpc.handler.RequstHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -23,7 +22,6 @@ public class RpcNettyServer {
 
     public void init() {
         beanFactory = new BeanFactory();
-        beanFactory.regist(DownLoadService.class.getName(), DownLoadServiceimpl.class);
         EventLoopGroup parent = new NioEventLoopGroup(1);
         EventLoopGroup children = new NioEventLoopGroup();
 
@@ -38,24 +36,17 @@ public class RpcNettyServer {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline()
-//                                    .addLast(new HttpServerCodec())
-//                                    .addLast(new FileDecoder())
-                                .addLast(new FileEncoder())
-                                .addLast(new NettyServerHandler());
-//                                    .addLast("encode", new ObjectEncoder())
-//                                    .addLast("decode", new ObjectDecoder(ClassResolvers.cacheDisabled(this
-//                                            .getClass().getClassLoader())));
-//                                    .addLast("decoder", new StringDecoder())
-//                            //向pipeline加入编码器
-//                                    .addLast("encoder", new StringEncoder());
+                                .addLast(new RequstDecoder())
+                                .addLast(new RequstEncoder())
+                                .addLast(new RequstHandler());
                     }
                 });
+        this.bootstrap = bootstrap;
     }
 
     public void run() {
         try {
             ChannelFuture cf = bootstrap.bind(port).sync();
-            cf.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

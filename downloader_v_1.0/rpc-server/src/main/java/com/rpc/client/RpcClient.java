@@ -2,7 +2,10 @@ package com.rpc.client;
 
 
 import com.rpc.codec.FileDecoder;
+import com.rpc.codec.RequstDecoder;
+import com.rpc.codec.RequstEncoder;
 import com.rpc.handler.CilentHandler;
+import com.rpc.handler.RequstHandler;
 import com.rpc.protocal.Invocation;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -10,19 +13,20 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Proxy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Data
+@Slf4j
 public class RpcClient {
 
     //创建线程池
     private static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static CilentHandler client;
-    private  static ChannelFuture cf;
-    private  static Bootstrap bootstrap;
+    private  static Bootstrap bs;
 
     public RpcClient() {
         initClient();
@@ -48,6 +52,7 @@ public class RpcClient {
                     return executor.submit(client).get();
 
                 });
+
     }
 
     //初始化客户端
@@ -66,21 +71,24 @@ public class RpcClient {
                             @Override
                             protected void initChannel(SocketChannel ch) throws Exception {
                                 ChannelPipeline pipeline = ch.pipeline();
-                                pipeline.addLast(new FileDecoder())
-                                        .addLast(client);
+                                pipeline.addLast(new RequstDecoder())
+                                        .addLast(new RequstEncoder())
+                                        .addLast(new RequstHandler());
                             }
                         }
                 );
-
+        bs = bootstrap;
 
     }
 
     public ChannelFuture connect(String addrss , int port){
         try {
-            ChannelFuture cf  = bootstrap.connect("127.0.0.1", port).sync();
+//            log.info("connect to " + addrss + ": " + port);
+            ChannelFuture ccf  = bs.connect(addrss, port).sync();
+            return ccf;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return cf;
+        return null;
     }
 }

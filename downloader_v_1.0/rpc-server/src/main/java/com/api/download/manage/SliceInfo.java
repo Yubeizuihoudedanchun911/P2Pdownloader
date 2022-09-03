@@ -1,4 +1,4 @@
-package com.download.manage;
+package com.api.download.manage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,5 +12,5 @@ import lombok.Data;
 public class SliceInfo {
     private  long st;
     private  long ed;
-    private  long page_size ;
+    private  long page ;
 }

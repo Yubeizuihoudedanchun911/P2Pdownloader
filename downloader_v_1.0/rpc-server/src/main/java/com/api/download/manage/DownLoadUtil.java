@@ -1,4 +1,4 @@
-package com.download.manage;
+package com.api.download.manage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,13 +12,13 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
-public class DownLoadManager {
+public class DownLoadUtil {
     public final static long SLICE_SIZE = 1<<20;
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
     public static long getTotalSize(String downloadUrl){
         //大小探测
-        ResponseEntity<byte[]> responseEntity = DownLoadManager.getFileContentByUrlAndPosition(downloadUrl, 0, 1);
+        ResponseEntity<byte[]> responseEntity = DownLoadUtil.getFileContentByUrlAndPosition(downloadUrl, 0, 1);
         HttpHeaders headers = responseEntity.getHeaders();
         String rangeBytes = headers.getFirst("Content-Range");
 
@@ -40,33 +40,34 @@ public class DownLoadManager {
         return REST_TEMPLATE.exchange(downloadUrl, HttpMethod.GET, httpEntity, byte[].class);
     }
 
-    public static boolean download(String tempPath, String downloadUrl, SliceInfo sliceInfo, String fName) {
-        log.info("下载分片文件：{}，分片序号 {}", fName, sliceInfo.getPage_size());
+    public static File download(String tempPath, String downloadUrl, SliceInfo sliceInfo, String fName) {
+        log.info("下载分片文件：{}，分片序号 {}", fName, sliceInfo.getPage());
         log.info("downloading ... " + Thread.currentThread().getName());
 
 
         // 创建一个分片文件对象
-        File file = new File(tempPath, sliceInfo.getPage_size() + "-" + fName);
+        File file = new File(tempPath, sliceInfo.getPage() + "-" + fName);
 
         if (file.exists() && file.length() == SLICE_SIZE) {
-            log.info("此分片文件 {} 已存在", sliceInfo.getPage_size());
-            return false;
+            log.info("此分片文件 {} 已存在", sliceInfo.getPage());
+            return null;
         }
 
         try (FileOutputStream fos = new FileOutputStream(file);) {
-            ResponseEntity<byte[]> responseEntity = DownLoadManager.getFileContentByUrlAndPosition(downloadUrl, sliceInfo.getSt(), sliceInfo.getEd());
+            ResponseEntity<byte[]> responseEntity = DownLoadUtil.getFileContentByUrlAndPosition(downloadUrl, sliceInfo.getSt(), sliceInfo.getEd());
 
             byte[] body = responseEntity.getBody();
             if (body != null && body.length == 0) {
                 log.warn("分片文件：{},没有内容", file.getName());
-                return false;
+                return null;
             }
             // 将分片内容写入临时存储分片文件
             fos.write(body);
-            return true;
+            log.info("数据写入"+file.getAbsolutePath()+"成功");
+            return file;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
@@ -82,6 +83,7 @@ public class DownLoadManager {
                     left -= fileChannel.transferTo((size - left), left, channel);
                 }
                 fileChannel.close();
+                log.info("delete"+file.delete());
                 file.delete();
             }
         } catch (IOException e) {

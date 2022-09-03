@@ -1,23 +1,16 @@
 package com.rpc.protocal;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 //协议包
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MessageProtocol {
     private int len; //关键
     private byte[] content;
+    private long slice_idx;
 
-    public int getLen() {
-        return len;
-    }
-
-    public void setLen(int len) {
-        this.len = len;
-    }
-
-    public byte[]  getContent() {
-        return content;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
 }

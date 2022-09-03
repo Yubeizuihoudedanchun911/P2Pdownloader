@@ -37,4 +37,9 @@ public class Node {
     public boolean equals(Node node ){
         return host.equals(node.host) && port == node.getPort();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

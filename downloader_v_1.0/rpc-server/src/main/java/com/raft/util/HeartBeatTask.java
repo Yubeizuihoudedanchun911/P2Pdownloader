@@ -1,10 +1,12 @@
-package com.raft;
+package com.raft.util;
 
 import com.raft.common.RaftNode;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class HeartBeatTask {
     //  默认心跳间隔
-    private  final int DEFUALT_HEARTBEAT_INTERVAL = 1000;
+    private  final int DEFUALT_HEARTBEAT_INTERVAL =  5000;
     private RaftNode raftNode;
     private  Thread heartBeat;
 
@@ -13,8 +15,9 @@ public class HeartBeatTask {
     }
 
     public void start(){
-        new Thread(()->{
+        heartBeat = new Thread(()->{
             while(true){
+                log.info(System.currentTimeMillis()+" ");
                 raftNode.heartBeat();
                 try {
                     Thread.sleep(DEFUALT_HEARTBEAT_INTERVAL);
