@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class MessageProtocol {
     private int len; //关键
     private byte[] content;
-    private long slice_idx;
+    private int slice_idx;
 
 }

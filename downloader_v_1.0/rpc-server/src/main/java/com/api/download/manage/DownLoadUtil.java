@@ -99,7 +99,7 @@ public class DownLoadUtil {
         CopyOnWriteArrayList<SliceInfo> list = new CopyOnWriteArrayList<>();
         long size = allBytes;
         long left = 0;
-        long page = 0;
+        int page = 0;
         while (size > 0) {
             long start = 0;
             long end;

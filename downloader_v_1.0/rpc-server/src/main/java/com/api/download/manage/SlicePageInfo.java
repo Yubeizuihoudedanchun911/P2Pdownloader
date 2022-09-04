@@ -8,5 +8,5 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SlicePageInfo {
     private CopyOnWriteArrayList<SliceInfo> sliceInfoList;
 
-    private Long pages;
+    private int pages;
 }

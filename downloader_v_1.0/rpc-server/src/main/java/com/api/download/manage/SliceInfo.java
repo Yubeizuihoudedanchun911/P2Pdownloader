@@ -12,5 +12,5 @@ import lombok.Data;
 public class SliceInfo {
     private  long st;
     private  long ed;
-    private  long page ;
+    private  int page ;
 }
