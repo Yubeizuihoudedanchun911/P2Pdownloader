@@ -5,10 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>rpc-com.Server</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>tracker</artifactId>
     <version>1.0-SNAPSHOT</version>
-
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -60,6 +58,4 @@
 
 
     </dependencies>
-
-
 </project>

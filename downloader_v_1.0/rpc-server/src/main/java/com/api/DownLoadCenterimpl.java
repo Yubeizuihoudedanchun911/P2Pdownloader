@@ -74,8 +74,12 @@ public class DownLoadCenterimpl implements DownloadCenter {
      */
     @Override
     public Request downloadArrange(String downloadUrl, Node targetNode,SlicePageInfo slicePageInfo) {
-
-        PriorityQueue<HeapPoint> heapPoints = me.getPriorityQueue();
+        Map<Node, HeapPoint> taskMap = me.getTaskMap();
+        Collection<HeapPoint> values = taskMap.values();
+        PriorityQueue<HeapPoint> heapPoints  = new PriorityQueue<HeapPoint>((a, b) -> {
+            return a.getTaskLeft() - b.getTaskLeft();
+        });
+        heapPoints.addAll(values);
 
         Map<String, List<SliceInfo>> taskArrangement = new ConcurrentHashMap<>();
         for (SliceInfo sliceInfo : slicePageInfo.getSliceInfoList()) {
@@ -88,6 +92,7 @@ public class DownLoadCenterimpl implements DownloadCenter {
             taskArrangement.put(key, list);
             log.info(taskArrangement.toString());
             h.setTaskLeft(h.getTaskLeft() + 1);
+            taskMap.put(node,h);
             heapPoints.add(h);
         }
 
@@ -155,6 +160,8 @@ public class DownLoadCenterimpl implements DownloadCenter {
                     log.info("node download task finished " + downloadUrl + ": " + sliceInfo.getPage());
                     fileChannel.close();
                     tmpFile.delete();
+
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -162,8 +169,15 @@ public class DownLoadCenterimpl implements DownloadCenter {
                 }
             });
         }
+        sendCommandAck(request.getSrcNode(),list.size());
 
 
+    }
+
+    //  每个下载node 将下载的总片输 回交给leader 进行管理
+    public void sendCommandAck(Node leader , int doneTask){
+        Request req = new Request<Integer>(CommandType.COMMAND_ACK, me.getMe(),doneTask);
+        me.send(leader,req);
     }
 
     @Override

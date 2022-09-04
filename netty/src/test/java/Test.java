@@ -6,6 +6,10 @@ import net.bytebuddy.description.method.MethodDescription;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Test {
     class Te<T extends Object>{
@@ -58,27 +62,27 @@ public class Test {
                     ", name='" + name + '\'' +
                     '}';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof P)) return false;
+            P p = (P) o;
+            return hh == p.hh;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(hh, name);
+        }
     }
     @org.junit.jupiter.api.Test
-    public void test(){
-        Type type = new TypeToken<Te <P>>() {}.getType();
-        P ps = new P(10,"woaini");
-//        System.out.println(ps.toString());
-        Te<P> ss = new Te<P>(ps,5);
-        Gson gson = new Gson();
-
-        String s =        gson.toJson(ss);
-        System.out.println(s);
-
-        Te t = JSON.parseObject(s,Te.class);
-        System.out.println(t.count);
-        System.out.println(t.getObj().toString());
+    public void test() throws UnknownHostException {
 
 
-//        P pp = JSON.parseObject(t.getObj().toString(),P.class);
-        t = (Te<P>)t;
-        System.out.println(t);
+        System.out.println(InetAddress.getByName("localhost").getHostAddress().hashCode());
 
+        System.out.println(InetAddress.getByName("localhost").getHostAddress().hashCode());
 
     }
 }

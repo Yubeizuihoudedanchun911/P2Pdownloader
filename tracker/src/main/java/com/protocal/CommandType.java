@@ -1,4 +1,4 @@
-package com.rpc.protocal;
+package com.protocal;
 
 public class CommandType {
     /**
@@ -13,7 +13,7 @@ public class CommandType {
     public static final int ACK = 7;
     public static final int DATA_TRANSFER = 8;
     public static final int COMMAND = 9;
-    public static final int COMMAND_ACK = 10; //
+    public static final int REQ_ACK = 10;
     public static final int DOWNLOAD_ACK = 11;
 
     public static final int REQ_JOIN_TO_TRACKER = 12;
@@ -22,6 +22,6 @@ public class CommandType {
     public static final int RESP_TRACKER_TO_LEADER_ACK=15;
 
 
-    public static final int NOTICE_GROUPNODES_ONLINE = 16;
+    public static final int REQ_NOTICE_GROUP_NODE = 16;
 
 }

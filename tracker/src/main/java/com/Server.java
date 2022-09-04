@@ -1,19 +1,19 @@
-package com.rpc.server;
+package com;
 
-import com.rpc.codec.RequstDecoder;
-import com.rpc.codec.RequstEncoder;
-import com.rpc.handler.RequstHandler;
+import com.codec.RequstDecoder;
+import com.codec.RequstEncoder;
+import com.handler.RequstHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class RpcNettyServer {
+public class Server {
     private int port;
-    private static ServerBootstrap bootstrap;
+    private static ServerBootstrap bootstrap1;
 
-    public RpcNettyServer(int port) {
+    public Server(int port) {
         this.port = port;
         init();
     }
@@ -38,12 +38,12 @@ public class RpcNettyServer {
                                 .addLast(new RequstHandler());
                     }
                 });
-        this.bootstrap = bootstrap;
+        bootstrap1 = bootstrap;
     }
 
     public void run() {
         try {
-            ChannelFuture cf = bootstrap.bind(port).sync();
+            ChannelFuture cf = bootstrap1.bind(port).sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
