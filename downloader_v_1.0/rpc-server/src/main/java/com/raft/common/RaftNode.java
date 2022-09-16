@@ -22,6 +22,8 @@ import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelFuture;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -32,6 +34,9 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static com.rpc.RPCProxy.getProxy;
+import static com.rpc.RPCProxy.rpcMap;
 
 @Slf4j
 @Data
@@ -58,14 +63,14 @@ public class RaftNode {
         this.name = name;
         stateMachine = new StateMachine();
         me = new Node(host, port);
-//        Node n1 = new Node("localhost",7070);
-//        Node n2 = new Node("localhost",8080);
-//        Node n3 = new Node("localhost",6060);
-//        nodeSet.add(n1);
-//        nodeSet.add(n2);
-//        nodeSet.add(n3);
+
         RequestProcessor.setRaftNode(this);
         init();
+    }
+
+    @Override
+    public String toString() {
+        return "RaftNode{}";
     }
 
     public void init_Config() {
@@ -106,6 +111,8 @@ public class RaftNode {
         lock = new Object();
         init_lock = new Object();
         downloadCenter = new DownLoadCenterimpl(this);
+        rpcMap = new ConcurrentHashMap<>();
+        rpcMap.put(DownloadCenter.class.getName(),downloadCenter);
     }
 
     public void send(Node node, Request req) {
@@ -130,7 +137,7 @@ public class RaftNode {
             case CommandType.COMMAND:
                 Thread downloadThread = new Thread(() -> {
                     log.info("node received download command");
-                    downloadCenter.dealDownload(req, this);
+//                    downloadCenter.dealDownload(req, this);
                     this.stateMachine.index++;
                 });
                 downloadThread.start();
@@ -181,10 +188,15 @@ public class RaftNode {
         log.info("node online " + nodeSet);
     }
 
-    public void broadcastToAll(Request req) {
+    public void broadcastToAll(LogEntry logEntry) {
         for (Node node : nodeSet) {
             Thread thread = new Thread(() -> {
-                send(node, req);
+                DownloadCenter proxy = (DownloadCenter)getProxy(DownloadCenter.class, node);
+                int doneTask = proxy.dealDownload(logEntry);
+                HeapPoint heapPoint = taskMap.get(node);
+                heapPoint.setTaskLeft(heapPoint.getTaskLeft() - doneTask);
+                taskMap.put(node,heapPoint);
+                log.info(taskMap.toString());
             });
             thread.start();
 
@@ -208,7 +220,6 @@ public class RaftNode {
      * starts election
      */
     public void election() {
-
         VoteEntity entry = new VoteEntity(stateMachine.getIndex(), stateMachine.getTerm());
         stateMachine.term++;
         Request req = new Request(CommandType.REQ_VOTE, me, entry);
@@ -249,7 +260,6 @@ public class RaftNode {
     }
 
     public void download(String uri, String fileName) {
-        Request req = downloadCenter.downloadReq(uri, fileName);
         downloadReqSender = new Thread(() -> {
             try {
                 synchronized (lock) {
@@ -259,7 +269,7 @@ public class RaftNode {
                 e.printStackTrace();
             }
             log.info("download req sended ");
-            send(leader, req);
+            downloadCenter.downloadReq(uri, fileName);
         });
         downloadReqSender.start();
     }

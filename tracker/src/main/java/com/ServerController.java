@@ -25,10 +25,10 @@ public class ServerController {
     private int port;
     private Server server;
     private Client client;
-    private PriorityQueue<Group> balance_stress;
+    private volatile PriorityQueue<Group> balance_stress;
     private static int GROUP_LIMIT;
     private Node me;
-    private Map<Node, Group> registNodesMap;
+    private volatile Map<Node, Group> registNodesMap;
 
     public ServerController(int port, int limit) {
         this.port = port;
@@ -69,37 +69,41 @@ public class ServerController {
     }
 
     private void handleJoinReq(Request request) {
-        Group group = balance_stress.peek();
-        Node srcNode = request.getSrcNode();
-        Set<Node> nodes;
-        if (group == null || (group.size() > GROUP_LIMIT && !registNodesMap.containsKey(srcNode))) {
-            nodes = new CopyOnWriteArraySet<>();
-            group = new Group(nodes);
-            balance_stress.add(group);
-            registNodesMap.put(srcNode, group);
-        }else{
-            if(registNodesMap.containsKey(srcNode)){
-                group = registNodesMap.get(srcNode);
+        synchronized (this) {
+            Group group = balance_stress.peek();
+            Node srcNode = request.getSrcNode();
+            Set<Node> nodes;
+            if (group == null || (group.size() > GROUP_LIMIT && !registNodesMap.containsKey(srcNode))) {
+                nodes = new CopyOnWriteArraySet<>();
+                group = new Group(nodes);
+                balance_stress.add(group);
+                registNodesMap.put(srcNode, group);
+            } else {
+                if (registNodesMap.containsKey(srcNode)) {
+                    group = registNodesMap.get(srcNode);
+                }
+                nodes = group.getOnline_nodes();
             }
-            nodes = group.getOnline_nodes();
-        }
-        GroupEntry groupEntry = new GroupEntry(nodes, group.getGroupID());
-        Request<GroupEntry> req = new Request<>(CommandType.RESP_JOIN_TO_TRACKER, me, groupEntry);
+            GroupEntry groupEntry = new GroupEntry(nodes, group.getGroupID());
+            Request<GroupEntry> req = new Request<>(CommandType.RESP_JOIN_TO_TRACKER, me, groupEntry);
 
-        send(srcNode, req);
-        group.joinGroup(srcNode);
-        log.info(registNodesMap.toString());
-        log.info("join req success ");
+            send(srcNode, req);
+            group.joinGroup(srcNode);
+            log.info(registNodesMap.toString());
+            log.info("join req success ");
+        }
     }
 
     private void handleUpdate(Request req) {
-        GroupEntry groupUpdateEntry = JSON.parseObject(req.getObj().toString(), GroupEntry.class);
-        Node srcNode = req.getSrcNode();
-        Set<Node> list = groupUpdateEntry.getNodes();
-        Group group = registNodesMap.get(srcNode);
-        group.leftGroup(list);
-        Request<Boolean> request = new Request<>(CommandType.RESP_TRACKER_TO_LEADER_ACK, me, true);
-        send(srcNode, request);
+        synchronized (this) {
+            GroupEntry groupUpdateEntry = JSON.parseObject(req.getObj().toString(), GroupEntry.class);
+            Node srcNode = req.getSrcNode();
+            Set<Node> list = groupUpdateEntry.getNodes();
+            Group group = registNodesMap.get(srcNode);
+            group.leftGroup(list);
+            Request<Boolean> request = new Request<>(CommandType.RESP_TRACKER_TO_LEADER_ACK, me, true);
+            send(srcNode, request);
+        }
     }
 
     private void send(Node targetNode, Request req) {
@@ -107,7 +111,6 @@ public class ServerController {
         Channel channel = connect.channel();
         channel.writeAndFlush(req);
         channel.closeFuture();
-
     }
 }
 

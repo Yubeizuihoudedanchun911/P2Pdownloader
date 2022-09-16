@@ -91,8 +91,6 @@ public class Follower implements State {
     public void dealMessage(Request request) {
         int cmd = request.getCmd();
         switch (cmd) {
-            case CommandType.RPC_INVOKE: // not finished
-                break;
             case CommandType.HEART_BEAT:
                 handleHeartbeat(request);
                 break;

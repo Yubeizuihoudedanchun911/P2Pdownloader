@@ -12,5 +12,4 @@ public class MessageProtocol {
     private int len; //关键
     private byte[] content;
     private int slice_idx;
-
 }

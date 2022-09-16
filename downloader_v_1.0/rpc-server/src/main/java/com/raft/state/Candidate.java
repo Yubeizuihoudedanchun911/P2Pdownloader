@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -24,19 +25,21 @@ public class Candidate implements State {
     private RaftNode raftNode;
     private Thread electionThread;
     private Set<String> voteRecord;
+    private Set<String> refuseRecord;
     private volatile boolean electionSuccess;
-    private int electionLimit;
+//    private int electionLimit;
     private  boolean run ;
 
     public Candidate(RaftNode raftNode) {
         this.raftNode = raftNode;
-        voteRecord = new HashSet<>();
+        voteRecord = new ConcurrentSkipListSet<>();
+        refuseRecord = new ConcurrentSkipListSet<>();
         this.voteRecord.add(raftNode.getMe().getHost()+":"+raftNode.getMe().getPort());
-        electionLimit = raftNode.getNodeSet().size()/2;
+//        electionLimit = raftNode.getNodeSet().size()/2;
         electionSuccess = false;
         electionThread = new Thread(() -> {
             run = true;
-            while (run && !electionSuccess && voteRecord.size() <= electionLimit) {
+            while (run && !electionSuccess ) {
                 raftNode.election();
                 try {
                     long reelection_time = 1500L;
@@ -44,14 +47,16 @@ public class Candidate implements State {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                if (voteRecord.size() < refuseRecord.size() && !electionSuccess) {
+                    log.info("CandidateToFollower by timeLimit");
+                    toFolower();
+                }else{
+                    log.info("CandidateToleader");
+                    electionSuccess = true;
+                    toLeader();
+                }
             }
-            if (voteRecord.size() <= electionLimit && !electionSuccess) {
-                log.info("CandidateToFollower by timeLimit");
-                toFolower();
-            }else{
-                log.info("CandidateToleader");
-                toLeader();
-            }
+
         });
         electionThread.start();
     }
@@ -70,16 +75,17 @@ public class Candidate implements State {
         Boolean flag = JSON.parseObject(request.getObj().toString(),Boolean.class);
         synchronized (voteRecord){
             String src = request.getSrcNode().getHost()+":"+request.getSrcNode().getPort();
-            if(!voteRecord.contains(src) && flag){
-                voteRecord.add(src);
-                log.info("get vote from " + src);
+            if(!voteRecord.contains(src) ) {
+                if( flag) {
+                    voteRecord.add(src);
+                    log.info("get vote from " + src);
+                }
+                else{
+                    refuseRecord.add(src);
+                    log.info("get vote from " + src);
+                }
             }
-            if(voteRecord.size()> electionLimit){
-                electionSuccess = true;
-                log.info("election success ");
-                raftNode.setLeader(raftNode.getMe());
-                toLeader();
-            }
+
         }
     }
 

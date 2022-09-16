@@ -13,6 +13,7 @@ import com.raft.entity.DownLoadReuestEntry;
 import com.raft.entity.HeapPoint;
 import com.raft.entity.LogEntry;
 import com.raft.util.TimeUtil;
+import com.rpc.client.RpcClient;
 import com.rpc.protocal.CommandType;
 import com.rpc.protocal.MessageProtocol;
 import com.rpc.protocal.Request;
@@ -20,6 +21,7 @@ import lombok.Data;
 import lombok.Synchronized;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -27,11 +29,14 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.api.download.manage.DownLoadUtil.*;
+import static com.rpc.RPCProxy.getProxy;
 
 @Slf4j
 @Data
+@Component("downloadCenter")
 public class DownLoadCenterimpl implements DownloadCenter {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private RaftNode me;
@@ -42,12 +47,25 @@ public class DownLoadCenterimpl implements DownloadCenter {
         taskListenerMap = new ConcurrentHashMap<>();
     }
 
+
     @Override
-    public Request downloadReq(String uri, String fileName) {
-        Command<DownLoadReuestEntry> command = new Command<>(uri, new DownLoadReuestEntry(true, null), me.getMe());
-        Request<Command> req = new Request<Command>(2, me.getMe(), command);
-        taskListenerMap.put(uri, new TaskListener(fileName, uri));
-        return req;
+    public String toString() {
+        return "DownLoadCenterimpl{" +
+                "me=" + me +
+                ", taskListenerMap=" + taskListenerMap +
+                '}';
+    }
+
+    @Override
+    public void downloadReq(String uri, String fileName) {
+//        Command<DownLoadReuestEntry> command = new Command<>(uri, new DownLoadReuestEntry(true, null), me.getMe());
+//        Request<Command> req = new Request<>(2, me.getMe(), command);
+        RpcClient rpcClient = new RpcClient();
+        TaskListener taskListener = new TaskListener(fileName, uri);
+        taskListenerMap.put(uri, taskListener);
+        DownloadCenter downloadCenter = (DownloadCenter) getProxy(DownloadCenter.class, me.getLeader());
+        int i = downloadCenter.fullDownLoad(uri, me.getMe());
+        taskListener.setTotalPages(i);
     }
 
     /**
@@ -57,7 +75,7 @@ public class DownLoadCenterimpl implements DownloadCenter {
      * @param downloadUrl
      */
     @Override
-    public Request downloadArrange(String downloadUrl, Node targetNode, SlicePageInfo slicePageInfo) {
+    public LogEntry downloadArrange(String downloadUrl, Node targetNode, SlicePageInfo slicePageInfo) {
         Map<Node, HeapPoint> taskMap = me.getTaskMap();
         Collection<HeapPoint> values = taskMap.values();
         PriorityQueue<HeapPoint> heapPoints = new PriorityQueue<HeapPoint>((a, b) -> {
@@ -81,17 +99,15 @@ public class DownLoadCenterimpl implements DownloadCenter {
 
         Command<Map<Node, List<SliceInfo>>> command = new Command(downloadUrl, taskArrangement, targetNode);
         LogEntry<Command> logEntry = new LogEntry(me.getStateMachine().getIndex(), me.getStateMachine().getTerm(), command);
-        Request<LogEntry> req = new Request<>(CommandType.COMMAND, me.getMe(), logEntry);
-        log.info("taskArrangement is sent");
-        log.info("after arranged task map :"+ me.getTaskMap().toString());
-        return req;
+//        Request<LogEntry> req = new Request<>(CommandType.COMMAND, me.getMe(), logEntry);
+        log.info("after arranged task map :" + taskArrangement);
+        return logEntry;
     }
 
+
     @Override
-
-
-    public void dealDownload(Request request, RaftNode curNode) {
-        LogEntry logEntry = JSON.parseObject(request.getObj().toString(), LogEntry.class);
+    public int dealDownload(LogEntry logEntry) {
+//        LogEntry logEntry = JSON.parseObject(request.getObj().toString(), LogEntry.class);
         Command command = JSON.parseObject(logEntry.getComand().toString(), Command.class);
         Node tarNode = command.getTargetNode();
         String downloadUrl = command.getTargetUri();
@@ -99,7 +115,8 @@ public class DownLoadCenterimpl implements DownloadCenter {
         }.getType());
         String key = me.getMe().getHost() + ":" + me.getMe().getPort();
         List<SliceInfo> list = taskArrangement.get(key);
-        if (list == null) return;
+        log.info("downLoad SLices list " + list);
+        if (list == null) return 0;
 
         for (SliceInfo sliceInfo : list) {
             executorService.submit(() -> {
@@ -116,8 +133,8 @@ public class DownLoadCenterimpl implements DownloadCenter {
                     messageProtocol.setContent(content);
                     messageProtocol.setSlice_idx(sliceInfo.getPage());
                     Command<MessageProtocol> command1 = new Command<>(downloadUrl, messageProtocol, tarNode);
-                    Request<Command> req = new Request<>(CommandType.DATA_TRANSFER, request.getSrcNode(), command1);
-                    curNode.send(tarNode, req);
+                    Request<Command> req = new Request<>(CommandType.DATA_TRANSFER, me.getMe(), command1);
+                    me.send(tarNode, req);
                     log.info("node download task finished " + downloadUrl + ": " + sliceInfo.getPage());
                     fileChannel.close();
                     tmpFile.delete();
@@ -130,16 +147,14 @@ public class DownLoadCenterimpl implements DownloadCenter {
                 }
             });
         }
-        sendCommandAck(request.getSrcNode(), list.size());
-
-
+        return list.size();
     }
 
-    //  每个下载node 将下载的总片输 回交给leader 进行管理
-    public void sendCommandAck(Node leader, int doneTask) {
-        Request req = new Request<Integer>(CommandType.COMMAND_ACK, me.getMe(), doneTask);
-        me.send(leader, req);
-    }
+//    //  每个下载node 将下载的总片输 回交给leader 进行管理
+//    public void sendCommandAck(Node leader, int doneTask) {
+//        Request req = new Request<Integer>(CommandType.COMMAND_ACK, me.getMe(), doneTask);
+//        me.send(leader, req);
+//    }
 
     @Override
     public SlicePageInfo getSilcePageInfo(String downloadUrl) {
@@ -158,7 +173,7 @@ public class DownLoadCenterimpl implements DownloadCenter {
             case CommandType.DATA_TRANSFER:
                 log.info("received data_transfer ");
                 taskListener.receiveSlice(command);
-                if(taskListener.success){
+                if (taskListener.success) {
                     taskListenerMap.remove(key);
                 }
                 break;
@@ -170,9 +185,40 @@ public class DownLoadCenterimpl implements DownloadCenter {
         }
     }
 
+    @Override
+    public int fullDownLoad(String uri, Node tarNode) {
+        SlicePageInfo slicePageInfo = getSilcePageInfo(uri);
+        LogEntry logEntry = downloadArrange(uri, tarNode, slicePageInfo);
+        new Thread(() -> {
+            me.broadcastToAll(logEntry);
+        }).start();
+
+        return slicePageInfo.getPages();
+    }
+
+    @Override
+    public void partDownLoad(String uri, Node tarNode, CopyOnWriteArrayList<Integer> slices) {
+        log.info("partDownLoad..." + slices);
+        SlicePageInfo slicePageInfo = getSilcePageInfo(uri);
+        SlicePageInfo failedSlices = new SlicePageInfo();
+        CopyOnWriteArrayList<SliceInfo> sliceInfos = new CopyOnWriteArrayList<>();
+        for (int i : slices) {
+            for (SliceInfo sliceInfo : slicePageInfo.getSliceInfoList()) {
+                if (sliceInfo.getPage() == i) {
+                    sliceInfos.add(sliceInfo);
+                }
+            }
+        }
+        failedSlices.setSliceInfoList(sliceInfos);
+        LogEntry logEntry = downloadArrange(uri, tarNode, failedSlices);
+        new Thread(() -> {
+            me.broadcastToAll(logEntry);
+        }).start();
+    }
+
     private class TaskListener {
         private volatile int totalPages;
-        private volatile int leftPages;
+        private AtomicInteger leftPages;
         private volatile boolean[] recordPages;
         private String file_name;
         private boolean success;
@@ -183,9 +229,8 @@ public class DownLoadCenterimpl implements DownloadCenter {
         public TaskListener(String file_name, String uri) {
             this.file_name = file_name;
             success = false;
-            timeUtil = new TimeUtil(checkTime);
             this.uri = uri;
-            count();
+
         }
 
         private void count() {
@@ -200,7 +245,6 @@ public class DownLoadCenterimpl implements DownloadCenter {
                         log.info("go on download ... ");
                         log.info("left pages ... " + leftPages);
                         goOnDownload();
-                    } else {
                         restTimeUtil();
                     }
                 }
@@ -220,8 +264,10 @@ public class DownLoadCenterimpl implements DownloadCenter {
 
         public void setTotalPages(int totalPages) {
             this.totalPages = totalPages;
-            this.leftPages = totalPages;
+            this.leftPages = new AtomicInteger(totalPages);
             recordPages = new boolean[totalPages];
+            timeUtil = new TimeUtil(checkTime);
+            count();
         }
 
 
@@ -233,10 +279,11 @@ public class DownLoadCenterimpl implements DownloadCenter {
         public void receiveSlice(Command command) {
 
             MessageProtocol msg = JSON.parseObject(command.getObj().toString(), MessageProtocol.class);
-
+            restTimeUtil();
             File file = new File(tempPath, msg.getSlice_idx() + "-" + file_name);
             if (file.exists() && file.length() == SLICE_SIZE) {
                 log.info("此分片文件 {} 已存在", msg.getSlice_idx());
+                return;
             }
             try {
                 FileChannel fileChannel = new FileOutputStream(file).getChannel();
@@ -247,14 +294,13 @@ public class DownLoadCenterimpl implements DownloadCenter {
                 fileChannel.write(ByteBuffer.wrap(content));
                 fileChannel.close();
                 log.info("数据写入成功");
-                this.recordPages[msg.getSlice_idx() - 1] = true;
                 synchronized (this) {
-                    leftPages -= 1;
+                    this.recordPages[msg.getSlice_idx() - 1] = true;
                 }
-                if (0 == leftPages && !isSuccess()) {
+                if (!isSuccess() && leftPages.decrementAndGet() == 0) {
                     downLoadLoacalCombine();
                 }
-                restTimeUtil();
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -270,21 +316,23 @@ public class DownLoadCenterimpl implements DownloadCenter {
             }
         }
 
-        private List<Integer> checkSlice() {
-            List<Integer> slicesIndex = new CopyOnWriteArrayList<>();
+        private CopyOnWriteArrayList<Integer> checkSlice() {
+            CopyOnWriteArrayList<Integer> slicesIndex = new CopyOnWriteArrayList<>();
             for (int i = 0; i < totalPages; i++) {
                 if (!recordPages[i]) {
-                    slicesIndex.add(i);
+                    slicesIndex.add(i+1);
                 }
             }
             return slicesIndex;
         }
 
         private void goOnDownload() {
-            List<Integer> slicesIndex = checkSlice();
-            Command<DownLoadReuestEntry> command = new Command<>(uri, new DownLoadReuestEntry(false, slicesIndex), me.getMe());
-            Request<Command> req = new Request<Command>(2, me.getMe(), command);
-            me.send(me.getLeader(), req);
+
+            new Thread(() -> {
+                CopyOnWriteArrayList<Integer> slicesIndex = checkSlice();
+                DownloadCenter proxy = (DownloadCenter) getProxy(DownloadCenter.class, me.getLeader());
+                proxy.partDownLoad(uri, me.getMe(), slicesIndex);
+            }).start();
         }
     }
 

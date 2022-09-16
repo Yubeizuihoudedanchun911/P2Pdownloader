@@ -12,6 +12,4 @@ public class Invocation implements Serializable {
     public String method;
     public String[] argType;
     public Object[] args;
-
-
 }
