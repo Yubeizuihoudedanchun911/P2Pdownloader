@@ -8,6 +8,8 @@
 
 ## Working in progress
 
+1.下载可靠性2.服务器下载负担3.下载速度带宽限制4.下载完整性检验5.P2P网络
+
 #### Download Process
 
 ------
@@ -18,7 +20,20 @@
 
 
 
+
+
 ![image-20220913152223679](D:/markdown_pics/image-20220913152223679.png)
+
+------
+
+#### Tech Details
+
+- taskArrange (SlicePageInfo 总片数) 通过记录的各节点任务数的Map 创建 小根堆，逐个将每片分配各个节点返回taskArrangement
+- dealDownLoad(TaskArrangement)通过taskArrangeMent找到自己节点需要的下载任务并且获取到请求下载节点地址，进行http分片下载。下载完毕后直接传给请求下载节点，并且将完成下载片数作为返回值回传给leader更新记录任务数的Map
+- fullDownLoad(URL) 完整下载url中的资源，进行taskArrange  派发给各个Node
+- partDownLoad(List,URL)根据List中记录的缺失片段 进行比对重新进行taskArrange  派发给各个Node
+- Class TaskListener监听下载任务是否完成，并且同步计时是否下载超时。下载超时通过checkSlice 进行检查缺少的片数返回List(缺失Slice的index），RPC调用partDownLoad
+- ![image-20221012200434387](D:/markdown_pics/image-20221012200434387.png)
 
 #### Completed
 
@@ -46,3 +61,6 @@
 - 数据持久化：对下载任务的持久化，下载片的暂时保存
 - 在组分配中以及分配算法中：加入Hash比对，询问节点是否已经保存过部分片段
 - 通过本地状态机的查询找到缓存分片
+- 可靠UDP传输
+
+https://github.com/Yubeizuihoudedanchun911/P2Pdownloader
