@@ -61,6 +61,5 @@
 - 数据持久化：对下载任务的持久化，下载片的暂时保存
 - 在组分配中以及分配算法中：加入Hash比对，询问节点是否已经保存过部分片段
 - 通过本地状态机的查询找到缓存分片
-- 可靠UDP传输
 
 https://github.com/Yubeizuihoudedanchun911/P2Pdownloader
