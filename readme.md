@@ -22,7 +22,7 @@
 
 
 
-![image-20220913152223679](D:/markdown_pics/image-20220913152223679.png)
+![image-20220913152223679](https://user-images.githubusercontent.com/83199295/230703713-f39f96a4-fdb9-4a83-8d07-8253edd4fab3.png)
 
 ------
 
@@ -33,7 +33,7 @@
 - fullDownLoad(URL) 完整下载url中的资源，进行taskArrange  派发给各个Node
 - partDownLoad(List,URL)根据List中记录的缺失片段 进行比对重新进行taskArrange  派发给各个Node
 - Class TaskListener监听下载任务是否完成，并且同步计时是否下载超时。下载超时通过checkSlice 进行检查缺少的片数返回List(缺失Slice的index），RPC调用partDownLoad
-- ![image-20221012200434387](D:/markdown_pics/image-20221012200434387.png)
+- ![image-20221012200434387](https://user-images.githubusercontent.com/83199295/230703752-846a7792-098f-4dae-8d94-bacfd2721a0d.png)
 
 #### Completed
 
