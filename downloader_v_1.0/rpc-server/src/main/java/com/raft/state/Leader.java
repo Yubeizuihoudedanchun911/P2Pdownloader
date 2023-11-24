@@ -20,11 +20,16 @@ import java.net.ConnectException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * raftNode state type
  */
-@Slf4j
+
 public class Leader implements State {
+
+    private static final Logger log = LoggerFactory.getLogger("Leader");
     private HeartBeatTask heartBeatTask;
     private RaftNode raftNode;
 

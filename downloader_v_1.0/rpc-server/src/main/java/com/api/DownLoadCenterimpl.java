@@ -1,15 +1,43 @@
 package com.api;
 
+import static com.api.download.manage.DownLoadUtil.SLICE_SIZE;
+import static com.api.download.manage.DownLoadUtil.getTotalSize;
+import static com.api.download.manage.DownLoadUtil.mergeFileTranTo;
+import static com.api.download.manage.DownLoadUtil.splitPage;
+import static com.rpc.RPCProxy.getProxy;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson2.JSON;
 import com.api.download.manage.DownLoadUtil;
 import com.api.download.manage.SliceInfo;
 import com.api.download.manage.SlicePageInfo;
-
+import com.db.dao.DownLoadFilePathDAO;
+import com.db.entity.FilePathEntity;
 import com.google.gson.reflect.TypeToken;
 import com.raft.common.Node;
 import com.raft.common.RaftNode;
 import com.raft.entity.Command;
-import com.raft.entity.DownLoadReuestEntry;
 import com.raft.entity.HeapPoint;
 import com.raft.entity.LogEntry;
 import com.raft.util.TimeUtil;
@@ -17,30 +45,33 @@ import com.rpc.client.RpcClient;
 import com.rpc.protocal.CommandType;
 import com.rpc.protocal.MessageProtocol;
 import com.rpc.protocal.Request;
-import lombok.Data;
-import lombok.Synchronized;
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.api.download.manage.DownLoadUtil.*;
-import static com.rpc.RPCProxy.getProxy;
-
-@Slf4j
-@Data
 @Component("downloadCenter")
 public class DownLoadCenterimpl implements DownloadCenter {
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+
+    private static final Logger log = LoggerFactory.getLogger("DownLoadCenterimpl");
+    private static final ExecutorService executorService =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private RaftNode me;
     public Map<String, TaskListener> taskListenerMap;
+
+    public RaftNode getMe() {
+        return me;
+    }
+
+    public void setMe(RaftNode me) {
+        this.me = me;
+    }
+
+    public Map<String, TaskListener> getTaskListenerMap() {
+        return taskListenerMap;
+    }
+
+    public void setTaskListenerMap(Map<String, TaskListener> taskListenerMap) {
+        this.taskListenerMap = taskListenerMap;
+    }
 
     public DownLoadCenterimpl(RaftNode me) {
         this.me = me;
@@ -58,8 +89,9 @@ public class DownLoadCenterimpl implements DownloadCenter {
 
     @Override
     public void downloadReq(String uri, String fileName) {
-//        Command<DownLoadReuestEntry> command = new Command<>(uri, new DownLoadReuestEntry(true, null), me.getMe());
-//        Request<Command> req = new Request<>(2, me.getMe(), command);
+        //        Command<DownLoadReuestEntry> command = new Command<>(uri, new DownLoadReuestEntry(true, null), me
+        //        .getMe());
+        //        Request<Command> req = new Request<>(2, me.getMe(), command);
         RpcClient rpcClient = new RpcClient();
         TaskListener taskListener = new TaskListener(fileName, uri);
         taskListenerMap.put(uri, taskListener);
@@ -71,8 +103,6 @@ public class DownLoadCenterimpl implements DownloadCenter {
     /**
      * 负载均衡： 使用小根堆 进行挑选当前任务较少的节点
      * to arrange downloadWork to each node
-     *
-     * @param downloadUrl
      */
     @Override
     public LogEntry downloadArrange(String downloadUrl, Node targetNode, SlicePageInfo slicePageInfo) {
@@ -98,8 +128,9 @@ public class DownLoadCenterimpl implements DownloadCenter {
         }
 
         Command<Map<Node, List<SliceInfo>>> command = new Command(downloadUrl, taskArrangement, targetNode);
-        LogEntry<Command> logEntry = new LogEntry(me.getStateMachine().getIndex(), me.getStateMachine().getTerm(), command);
-//        Request<LogEntry> req = new Request<>(CommandType.COMMAND, me.getMe(), logEntry);
+        LogEntry<Command> logEntry =
+                new LogEntry(me.getStateMachine().getIndex(), me.getStateMachine().getTerm(), command);
+        //        Request<LogEntry> req = new Request<>(CommandType.COMMAND, me.getMe(), logEntry);
         log.info("after arranged task map :" + taskArrangement);
         return logEntry;
     }
@@ -107,20 +138,24 @@ public class DownLoadCenterimpl implements DownloadCenter {
 
     @Override
     public int dealDownload(LogEntry logEntry) {
-//        LogEntry logEntry = JSON.parseObject(request.getObj().toString(), LogEntry.class);
+        //        LogEntry logEntry = JSON.parseObject(request.getObj().toString(), LogEntry.class);
         Command command = JSON.parseObject(logEntry.getComand().toString(), Command.class);
         Node tarNode = command.getTargetNode();
         String downloadUrl = command.getTargetUri();
-        Map<String, List<SliceInfo>> taskArrangement = JSON.parseObject(command.getObj().toString(), new TypeToken<Map<String, List<SliceInfo>>>() {
-        }.getType());
+        Map<String, List<SliceInfo>> taskArrangement =
+                JSON.parseObject(command.getObj().toString(), new TypeToken<Map<String, List<SliceInfo>>>() {
+                }.getType());
         String key = me.getMe().getHost() + ":" + me.getMe().getPort();
         List<SliceInfo> list = taskArrangement.get(key);
         log.info("downLoad SLices list " + list);
-        if (list == null) return 0;
+        if (list == null) {
+            return 0;
+        }
 
         for (SliceInfo sliceInfo : list) {
             executorService.submit(() -> {
-                File tmpFile = DownLoadUtil.download(tempPath, downloadUrl, sliceInfo, "" + tarNode.getHost() + "_" + tarNode.getPort() + "-" + UUID.randomUUID());
+                File tmpFile = DownLoadUtil.download(tempPath, downloadUrl, sliceInfo,
+                        "" + tarNode.getHost() + "_" + tarNode.getPort() + "-" + UUID.randomUUID());
                 try {
                     FileChannel fileChannel = new FileInputStream(tmpFile).getChannel();
                     ByteBuffer buffer = ByteBuffer.allocateDirect(1 << 20);
@@ -150,11 +185,11 @@ public class DownLoadCenterimpl implements DownloadCenter {
         return list.size();
     }
 
-//    //  每个下载node 将下载的总片输 回交给leader 进行管理
-//    public void sendCommandAck(Node leader, int doneTask) {
-//        Request req = new Request<Integer>(CommandType.COMMAND_ACK, me.getMe(), doneTask);
-//        me.send(leader, req);
-//    }
+    //    //  每个下载node 将下载的总片输 回交给leader 进行管理
+    //    public void sendCommandAck(Node leader, int doneTask) {
+    //        Request req = new Request<Integer>(CommandType.COMMAND_ACK, me.getMe(), doneTask);
+    //        me.send(leader, req);
+    //    }
 
     @Override
     public SlicePageInfo getSilcePageInfo(String downloadUrl) {
@@ -248,6 +283,9 @@ public class DownLoadCenterimpl implements DownloadCenter {
                         restTimeUtil();
                     }
                 }
+                DownLoadFilePathDAO downLoadFilePathDAO = new DownLoadFilePathDAO();
+                downLoadFilePathDAO.save(new FilePathEntity(file_name,uri));
+
             });
         }
 
@@ -320,7 +358,7 @@ public class DownLoadCenterimpl implements DownloadCenter {
             CopyOnWriteArrayList<Integer> slicesIndex = new CopyOnWriteArrayList<>();
             for (int i = 0; i < totalPages; i++) {
                 if (!recordPages[i]) {
-                    slicesIndex.add(i+1);
+                    slicesIndex.add(i + 1);
                 }
             }
             return slicesIndex;

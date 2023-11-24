@@ -1,18 +1,12 @@
 package com.api;
 
 
-import com.api.download.manage.SlicePageInfo;
-import com.raft.common.Node;
-import com.raft.common.RaftNode;
-import com.raft.entity.Command;
-import com.raft.entity.LogEntry;
-import com.rpc.protocal.Request;
-
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.api.download.manage.DownLoadUtil.getTotalSize;
-import static com.api.download.manage.DownLoadUtil.splitPage;
+import com.api.download.manage.SlicePageInfo;
+import com.raft.common.Node;
+import com.raft.entity.LogEntry;
+import com.rpc.protocal.Request;
 
 public interface DownloadCenter {
     public static final String tempPath = "E://Java/downloadTest";
@@ -27,9 +21,9 @@ public interface DownloadCenter {
 
     public void dealDownloadTask(Request request);
 
-    public int fullDownLoad(String uri,Node me);
+    public int fullDownLoad(String uri, Node me);
 
-    public void partDownLoad(String uri , Node tarNode, CopyOnWriteArrayList<Integer> slices);
+    public void partDownLoad(String uri, Node tarNode, CopyOnWriteArrayList<Integer> slices);
 
 
 }

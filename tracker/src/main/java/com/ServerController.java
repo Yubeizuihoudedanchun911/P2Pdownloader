@@ -1,5 +1,13 @@
 package com;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import com.alibaba.fastjson2.JSON;
 import com.common.Group;
 import com.common.Node;
@@ -7,18 +15,10 @@ import com.common.RequestProcessor;
 import com.entity.GroupEntry;
 import com.protocal.CommandType;
 import com.protocal.Request;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @Slf4j
 public class ServerController {
@@ -55,13 +55,14 @@ public class ServerController {
 
     public void handleRequst(Request request) {
         int cmd = request.getCmd();
-        log.info("receive req from " + request.getSrcNode().getHost() + ":" + request.getSrcNode().getPort() + "cmd : " + cmd);
+        log.info("receive req from " + request.getSrcNode().getHost() + ":" + request.getSrcNode().getPort() + "cmd : "
+                + cmd);
         switch (cmd) {
             case CommandType
                     .REQ_JOIN_TO_TRACKER:
                 handleJoinReq(request);
-            log.info(""+registNodesMap);
-            break;
+                log.info("" + registNodesMap);
+                break;
             case CommandType.LEADER_UPDATE_GROUP:
                 handleUpdate(request);
                 break;

@@ -1,13 +1,35 @@
 package com.rpc.protocal;
 
 import com.raft.common.Node;
-import lombok.Data;
-import org.apache.tomcat.util.net.openssl.ciphers.Protocol;
-@Data
+
 public class Request<T> {
 
-    private  int cmd = -1 ;
-    private Node srcNode ;
+    public int getCmd() {
+        return cmd;
+    }
+
+    public void setCmd(int cmd) {
+        this.cmd = cmd;
+    }
+
+    public Node getSrcNode() {
+        return srcNode;
+    }
+
+    public void setSrcNode(Node srcNode) {
+        this.srcNode = srcNode;
+    }
+
+    public T getObj() {
+        return obj;
+    }
+
+    public void setObj(T obj) {
+        this.obj = obj;
+    }
+
+    private int cmd = -1;
+    private Node srcNode;
     private T obj;
 
     public Request(int cmd, Node srcNode, T obj) {

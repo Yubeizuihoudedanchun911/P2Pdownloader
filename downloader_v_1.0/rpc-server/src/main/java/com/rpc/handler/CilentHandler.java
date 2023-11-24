@@ -1,13 +1,5 @@
 package com.rpc.handler;
 
-import com.alibaba.fastjson.JSON;
-
-import com.rpc.protocal.Invocation;
-import com.rpc.protocal.MessageProtocol;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,8 +11,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.alibaba.fastjson.JSON;
+import com.rpc.protocal.Invocation;
+import com.rpc.protocal.MessageProtocol;
+
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
 public class CilentHandler extends SimpleChannelInboundHandler<MessageProtocol> implements Callable {
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static final ExecutorService executorService =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private ChannelHandlerContext ctx;
     private Invocation invocation;
     private Object res;
@@ -59,7 +60,7 @@ public class CilentHandler extends SimpleChannelInboundHandler<MessageProtocol> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MessageProtocol ms) throws Exception {
-        String name = UUID.randomUUID().toString() +".png";
+        String name = UUID.randomUUID().toString() + ".png";
         System.out.println("read");
         File file = new File("E://Java/tmep", name);
         FileChannel fileChannel = new FileOutputStream(file).getChannel();

@@ -1,35 +1,41 @@
 package com.rpc.client;
 
 
-import com.raft.common.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rpc.codec.RequstDecoder;
 import com.rpc.codec.RequstEncoder;
-import com.rpc.handler.CilentHandler;
 import com.rpc.handler.RequstHandler;
-import com.rpc.protocal.Invocation;
-import com.rpc.protocal.Request;
+
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Proxy;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-@Data
-@Slf4j
 public class RpcClient {
-    private  static Bootstrap bs;
+    private static Bootstrap bs;
+
+
+    private static final Logger log = LoggerFactory.getLogger("RpcClient");
+
+    public static Bootstrap getBs() {
+        return bs;
+    }
+
+    public static void setBs(Bootstrap bs) {
+        RpcClient.bs = bs;
+    }
 
     public RpcClient() {
         initClient();
     }
-
-
 
 
     //初始化客户端
@@ -49,7 +55,7 @@ public class RpcClient {
                                 ChannelPipeline pipeline = ch.pipeline();
                                 pipeline.addLast(new RequstDecoder())
                                         .addLast(new RequstEncoder())
-                                        .addLast( new RequstHandler());
+                                        .addLast(new RequstHandler());
                             }
                         }
                 );
@@ -57,10 +63,10 @@ public class RpcClient {
 
     }
 
-    public ChannelFuture connect(String addrss , int port){
+    public ChannelFuture connect(String addrss, int port) {
         try {
-//            log.info("connect to " + addrss + ": " + port);
-            ChannelFuture ccf  = bs.connect(addrss, port).sync();
+            //            log.info("connect to " + addrss + ": " + port);
+            ChannelFuture ccf = bs.connect(addrss, port).sync();
             return ccf;
         } catch (Exception e) {
             e.printStackTrace();

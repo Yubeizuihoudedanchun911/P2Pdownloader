@@ -1,8 +1,5 @@
 package com.raft.common;
 
-import lombok.SneakyThrows;
-
-import java.net.InetAddress;
 import java.util.Objects;
 
 public class Node {
@@ -39,14 +36,18 @@ public class Node {
         this.connect = connect;
     }
 
-    public boolean equals(Node node ){
+    public boolean equals(Node node) {
         return host.equals(node.host) && port == node.getPort();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Node)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Node)) {
+            return false;
+        }
         Node node = (Node) o;
         return port == node.port && Objects.equals(host, node.host);
     }

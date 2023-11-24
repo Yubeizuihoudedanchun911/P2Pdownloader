@@ -16,7 +16,7 @@ public class CommandType {
     public static final int DOWNLOAD_ACK = 11;
 
     public static final int REQ_JOIN_TO_TRACKER = 12;
-    public static final int RESP_JOIN_TO_TRACKER =13;
+    public static final int RESP_JOIN_TO_TRACKER = 13;
 
 
     public static final int NOTICE_GROUPNODES_ONLINE = 16;

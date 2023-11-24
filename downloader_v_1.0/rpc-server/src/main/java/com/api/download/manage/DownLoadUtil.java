@@ -1,22 +1,26 @@
 package com.api.download.manage;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
-import java.nio.channels.FileChannel;
-import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DownLoadUtil {
-    public final static long SLICE_SIZE = 1<<20;
+    public final static long SLICE_SIZE = 1 << 20;
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
-    public static long getTotalSize(String downloadUrl){
+    public static long getTotalSize(String downloadUrl) {
         //大小探测
         ResponseEntity<byte[]> responseEntity = DownLoadUtil.getFileContentByUrlAndPosition(downloadUrl, 0, 1);
         HttpHeaders headers = responseEntity.getHeaders();
@@ -54,7 +58,8 @@ public class DownLoadUtil {
         }
 
         try (FileOutputStream fos = new FileOutputStream(file);) {
-            ResponseEntity<byte[]> responseEntity = DownLoadUtil.getFileContentByUrlAndPosition(downloadUrl, sliceInfo.getSt(), sliceInfo.getEd());
+            ResponseEntity<byte[]> responseEntity =
+                    DownLoadUtil.getFileContentByUrlAndPosition(downloadUrl, sliceInfo.getSt(), sliceInfo.getEd());
 
             byte[] body = responseEntity.getBody();
             if (body != null && body.length == 0) {
@@ -63,7 +68,7 @@ public class DownLoadUtil {
             }
             // 将分片内容写入临时存储分片文件
             fos.write(body);
-            log.info("数据写入"+file.getAbsolutePath()+"成功");
+            log.info("数据写入" + file.getAbsolutePath() + "成功");
             return file;
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +78,7 @@ public class DownLoadUtil {
 
 
     public static boolean mergeFileTranTo(String tempPath, String fName, long page) {
-        log.info("merging...",Thread.currentThread().getName());
+        log.info("merging...", Thread.currentThread().getName());
         try (FileChannel channel = new FileOutputStream(new File(tempPath, fName)).getChannel()) {
             for (long i = 1; i <= page; i++) {
                 File file = new File(tempPath, i + "-" + fName);
@@ -83,13 +88,13 @@ public class DownLoadUtil {
                     left -= fileChannel.transferTo((size - left), left, channel);
                 }
                 fileChannel.close();
-                log.info("delete"+file.delete());
+                log.info("delete" + file.delete());
                 file.delete();
             }
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }finally {
+        } finally {
             return true;
         }
 

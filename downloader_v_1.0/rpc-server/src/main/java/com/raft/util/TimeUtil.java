@@ -3,7 +3,7 @@ package com.raft.util;
 public class TimeUtil {
     private Long lastTime;
     private final Long overtime;
-//    private final Long bySecond = 1000L;
+    //    private final Long bySecond = 1000L;
 
 
     public TimeUtil(Long overtime) {
@@ -12,7 +12,7 @@ public class TimeUtil {
     }
 
 
-    public void updateLastTime(){
+    public void updateLastTime() {
         lastTime = System.currentTimeMillis();
     }
 

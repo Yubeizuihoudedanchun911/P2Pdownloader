@@ -1,7 +1,9 @@
 package com.raft.state;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson2.JSON;
-import com.google.gson.reflect.TypeToken;
 import com.raft.common.Node;
 import com.raft.common.RaftNode;
 import com.raft.entity.LogEntry;
@@ -9,27 +11,76 @@ import com.raft.entity.VoteEntity;
 import com.raft.util.TimeUtil;
 import com.rpc.protocal.CommandType;
 import com.rpc.protocal.Request;
-import jdk.nashorn.internal.ir.RuntimeNode;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-
-import java.lang.reflect.Type;
 
 /**
  * author : YBzhddc_911
  */
-@Slf4j
-@Data
+
+
 public class Follower implements State {
+
+    private static final Logger log = LoggerFactory.getLogger("Follower");
     private RaftNode raftNode;
     private TimeUtil timeUtil;
     private Thread timeMonitor;
-//    private Thread voteTimeCounter;
+    //    private Thread voteTimeCounter;
     private TimeUtil voteCD;
     private volatile boolean run;
     private final long checkTime = 10 * 1000;
     private Node votedFor;
-//    private volatile boolean electionRun;
+
+    public RaftNode getRaftNode() {
+        return raftNode;
+    }
+
+    public void setRaftNode(RaftNode raftNode) {
+        this.raftNode = raftNode;
+    }
+
+    public TimeUtil getTimeUtil() {
+        return timeUtil;
+    }
+
+    public void setTimeUtil(TimeUtil timeUtil) {
+        this.timeUtil = timeUtil;
+    }
+
+    public Thread getTimeMonitor() {
+        return timeMonitor;
+    }
+
+    public void setTimeMonitor(Thread timeMonitor) {
+        this.timeMonitor = timeMonitor;
+    }
+
+    public TimeUtil getVoteCD() {
+        return voteCD;
+    }
+
+    public void setVoteCD(TimeUtil voteCD) {
+        this.voteCD = voteCD;
+    }
+
+    public boolean isRun() {
+        return run;
+    }
+
+    public void setRun(boolean run) {
+        this.run = run;
+    }
+
+    public long getCheckTime() {
+        return checkTime;
+    }
+
+    public Node getVotedFor() {
+        return votedFor;
+    }
+
+    public void setVotedFor(Node votedFor) {
+        this.votedFor = votedFor;
+    }
+    //    private volatile boolean electionRun;
 
     public Follower(RaftNode raftNode) {
         this.raftNode = raftNode;
@@ -116,7 +167,7 @@ public class Follower implements State {
             votedFor = request.getSrcNode();
             raftNode.getStateMachine().term = voteEntity.getLastLogTerm();
             restTimeUtil();
-            log.info(String.format("vote to %s:%d",request.getSrcNode().getHost(),request.getSrcNode().getPort()));
+            log.info(String.format("vote to %s:%d", request.getSrcNode().getHost(), request.getSrcNode().getPort()));
         } else {
             raftNode.vote(request.getSrcNode(), false);
         }
@@ -134,9 +185,9 @@ public class Follower implements State {
         }
     }
 
-    private void handleHeartbeat(Request request){
+    private void handleHeartbeat(Request request) {
         log.info("recevie heartbeat ");
-        LogEntry logEntry = JSON.parseObject(request.getObj().toString(),LogEntry.class);
+        LogEntry logEntry = JSON.parseObject(request.getObj().toString(), LogEntry.class);
         raftNode.setLeader(request.getSrcNode());
         raftNode.getStateMachine().setTerm(logEntry.getTerm());
         restTimeUtil();
