@@ -9,7 +9,7 @@ import com.com.raft.entity.LogEntry;
 import com.com.rpc.protocal.Request;
 
 public interface DownloadCenter {
-    public static final String tempPath = "E://Java/downloadTest";
+    public static final String tempPath = "/Users/ybzhddc_911/Desktop/test";
 
     public void downloadReq(String uri, String fileName);
 

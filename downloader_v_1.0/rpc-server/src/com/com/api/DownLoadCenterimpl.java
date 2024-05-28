@@ -95,6 +95,7 @@ public class DownLoadCenterimpl implements DownloadCenter {
         RpcClient rpcClient = new RpcClient();
         TaskListener taskListener = new TaskListener(fileName, uri);
         taskListenerMap.put(uri, taskListener);
+        while (me.getLeader() == null);
         DownloadCenter downloadCenter = (DownloadCenter) RPCProxy.getProxy(DownloadCenter.class, me.getLeader());
         int i = downloadCenter.fullDownLoad(uri, me.getMe());
         taskListener.setTotalPages(i);

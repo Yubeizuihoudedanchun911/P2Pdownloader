@@ -1,0 +1,13 @@
+
+y
+java:S1117"=Rename "bootstrap" which hides the field declared at line 19.(šŸÝæJ$970c2cf8-cea0-4c74-ab83-b975e1fe3929
+r
+java:S2696."6Make the enclosing method "static" or remove this set.(ÃÒð´J$7a6f44ef-0cfe-4b88-88cd-5427bd5115ad
+q
+java:S2209."5Change this instance-reference to a static reference.(ÃÒð´J$6503e0f1-04b3-48ae-9cfa-047af7f0cce4
+q
+java:S18543"6Remove this useless assignment to local variable "cf".(ÂÃ²RJ$509e9b23-6afb-4648-83e9-99ad450a09d3
+š
+java:S21424"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€J$40310462-9223-47a1-bf24-1ea681fd9443
+b
+java:S14813"'Remove this unused "cf" local variable.(ÂÃ²RJ$bd49c90d-c6a8-4c86-b5c8-f8335de19111

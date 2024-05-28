@@ -1,0 +1,70 @@
+
+x
+java:S3740½"/Provide the parametrized type for this generic.(¸î¸Óùÿÿÿÿ8Æâ›×ù1J$216d239a-6839-4806-a195-da4271d437d0
+x
+java:S3740½"/Provide the parametrized type for this generic.(¸î¸Óùÿÿÿÿ8Æâ›×ù1J$8ee2dd33-779c-462e-b999-a01de26d1bff
+s
+java:S3740Å"/Provide the parametrized type for this generic.(İÌ¿8Æâ›×ù1J$5193aa12-f69b-41ea-a85f-d3b17957fc3f
+s
+java:S3740Å"/Provide the parametrized type for this generic.(İÌ¿8Æâ›×ù1J$fc9d6934-b04a-4e19-beae-a67494f5914a
+s
+java:S3740Ñ"/Provide the parametrized type for this generic.(İÌ¿8Æâ›×ù1J$9f58968c-af7d-4610-a52e-0cb730534485
+s
+java:S3740Ñ"/Provide the parametrized type for this generic.(İÌ¿8Æâ›×ù1J$98e5774b-5e6b-43d5-a3ca-10b9068dfeb8
+s
+java:S3740à"/Provide the parametrized type for this generic.(„ş¹8Æâ›×ù1J$2760be67-6b10-491a-b2ad-8633d2c9faf8
+s
+java:S3740ğ"/Provide the parametrized type for this generic.(—˜ªù8Çâ›×ù1J$5c782fa3-ba33-44ea-acfd-390e6fec046e
+s
+java:S3740‘"/Provide the parametrized type for this generic.(™€Í¨8Çâ›×ù1J$3857d360-f32b-45f7-a278-fd0f36bef558
+x
+java:S3740"/Provide the parametrized type for this generic.(İìùÿÿÿÿ8Çâ›×ù1J$8e997887-44a7-47f4-bf9a-26d3de760b0d
+s
+java:S3740§"/Provide the parametrized type for this generic.(Ãö€æ8Çâ›×ù1J$01b696f6-7882-4c5f-8366-c2190e8cf78f
+s
+java:S3740»"/Provide the parametrized type for this generic.(µŸ„Œ8Çâ›×ù1J$29e78d67-4d7e-49a5-9165-f9e6cd58dfaf
+s
+java:S3740»"/Provide the parametrized type for this generic.(µŸ„Œ8Çâ›×ù1J$509df6ad-965b-40ba-ab41-d6ff4e32a6fc
+s
+java:S3740¼"/Provide the parametrized type for this generic.(±û“ª8Çâ›×ù1J$e8767b4c-abd8-48ff-8e17-1b82a3dd1570
+s
+java:S3740Ê"/Provide the parametrized type for this generic.(ıš‰ƒ8Çâ›×ù1J$130a5ae7-fa28-489d-82a7-a4a39ff7638a
+s
+java:S3740Ê"/Provide the parametrized type for this generic.(ıš‰ƒ8Çâ›×ù1J$7c9cca5d-e0d3-4650-94ab-d8835af7a529
+r
+java:S3740‰"/Provide the parametrized type for this generic.(Áßø8Çâ›×ù1J$399e9bcf-5928-4c16-9f03-a565219a6e73
+{
+java:S2629¤"7Use the built-in formatting to construct this argument.(ò©­Ş8Ìâ›×ù1J$0c904a50-21d1-4d24-9f1d-cad5fc808dcb
+h
+java:S2629¯"$Invoke method(s) only conditionally.(÷Ìç8Ìâ›×ù1J$b24b5dc4-00b9-4839-ab2a-316a846c39b4
+›	java:S1162"TRename this field "init_lock" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶¸şÛùÿÿÿÿ8Şâ›×ù1J$fde8a22a-02fa-4032-9b9d-6a1a390ce5be
+ 
+java:S14502"XRemove the "init_lock" field and declare it as a local variable in the relevant methods.(¶¸şÛùÿÿÿÿ8áâ›×ù1J$829fb6ff-36e7-4dc1-a338-3fe7b7e0bc31
+Ÿ
+java:S3077'"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(æë¹âøÿÿÿÿ8ãâ›×ù1J$23db72c6-62e1-4ad9-add5-542ae13b5ace
+Ÿ
+java:S3077-"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(Ö¿Äíÿÿÿÿÿ8Û³ˆØù1J$cfce202f-0540-42da-ab33-cda0dea05257
+‘	java:S100»"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¿ÿÓî8èâ›×ù1J$56361acd-e1fa-44f2-8673-1dd039627072
+p
+java:S1481Å",Remove this unused "request" local variable.(İÌ¿8îâ›×ù1J$0dd4ba20-09dd-4b5d-8938-061f8eb4e3e7
+
+java:S2696Ü"6Make the enclosing method "static" or remove this set.(æâºÍûÿÿÿÿ8ôâ›×ù1J$d61f24eb-7030-4be3-a542-57a8482f4ee0
+	java:S128ÿ"LEnd this switch case with an unconditional break, return or throw statement.(Éü¬©8÷â›×ù1J$f9868cae-c97c-4c18-802c-39b79bb49475
+„	java:S125ö"<This block of commented-out lines of code should be removed.(†¶¨ÿÿÿÿÿ8øâ›×ù1J$b9d44aa5-2855-4d9e-ac22-74169a3747bb
+–	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(İìùÿÿÿÿ8úâ›×ù1J$e7ff3de1-6f53-4054-a091-3499643a23e5
+…
+java:S3457¤"AFormat specifiers should be used instead of string concatenation.(ò©­Ş8ûâ›×ù1J$d9b49281-979c-476c-a847-5b61c9f7fba4
+e
+java:S1116Â"Remove this empty statement.(Åñ­õşÿÿÿÿ8ıâ›×ù1J$1a242b11-458b-47fd-890e-4a9a26517024
+–	java:S100İ"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(»³Ä¿şÿÿÿÿ8ÿâ›×ù1J$e5ab69c8-9fc0-4ccf-ad76-5f120a4e4375
+–	java:S100ä"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸áÉÇÿÿÿÿÿ8€ã›×ù1J$d39ff1bf-5811-4713-8f8d-6d800fed3df7
+¢
+java:S2142õ"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8ã›×ù1J$b6eae774-f22c-44dc-bf08-8f716877eaf2
+~
+java:S2274ó":Remove this call to "wait" or move it into a "while" loop.(ŒºÙ8‚ã›×ù1J$758cea6a-8207-4602-8f11-d821c513519d
+t
+java:S2446"0"notify" may not wake up the appropriate thread.(ŒâÌ†8ƒã›×ù1J$2386aafd-501d-4292-9d39-18322c3449c8
+…
+java:S3457‹"AFormat specifiers should be used instead of string concatenation.(²›Üâ8ƒã›×ù1J$f8c1825f-2607-443f-b614-8df2ba99f509
+u
+java:S10682"-Remove this unused "init_lock" private field.(¶¸şÛùÿÿÿÿ8„ã›×ù1J$347d177e-5ae5-44dd-909f-d5ff819381cb

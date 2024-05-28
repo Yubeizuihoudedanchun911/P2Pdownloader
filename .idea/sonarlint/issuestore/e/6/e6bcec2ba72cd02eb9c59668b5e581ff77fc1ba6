@@ -1,0 +1,23 @@
+
+E
+java:S37408"/Provide the parametrized type for this generic.(Ä©ú
+E
+java:S3740H"/Provide the parametrized type for this generic.(
+J
+java:S3740b"/Provide the parametrized type for this generic.(ÅÔ´°ùÿÿÿÿ
+E
+java:S3740n"/Provide the parametrized type for this generic.(¼òÑ…
+f
+java:S1301<"KReplace this "switch" statement by "if" statements to increase readability.(Ï—íàıÿÿÿÿ
+s	java:S116"YRename this field "balance_stress" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(æ°ÀËúÿÿÿÿ
+q
+java:S3008"VRename this field "GROUP_LIMIT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÔÛ‘½øÿÿÿÿ
+r
+java:S3077"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(æ°ÀËúÿÿÿÿ
+m
+java:S3077"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(‘íÜ
+>
+java:S3010#"(Remove this assignment of "GROUP_LIMIT".(ÄˆåÉ
+L
+java:S2696,"6Make the enclosing method "static" or remove this set.(ğû¡¸
+<	java:S131<""Add a default case to this switch.(Ï—íàıÿÿÿÿ

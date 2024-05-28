@@ -1,0 +1,6 @@
+
+²
+java:S1319"qThe type of "slices" should be an interface such as "List" rather than the implementation "CopyOnWriteArrayList".(‹ç¼ÑýÿÿÿÿJ$975a7dc7-808d-4a71-b80e-2cdd2eaf131d
+š	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÕûáˆþÿÿÿÿJ$afdcf358-15ca-4c06-87bc-e7edc7e2dd76
+‚
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÕûáˆþÿÿÿÿJ$eca63ca0-1284-4a09-8ae6-2b1ce8feaf62

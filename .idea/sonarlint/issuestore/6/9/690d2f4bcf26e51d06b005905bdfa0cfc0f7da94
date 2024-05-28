@@ -1,0 +1,14 @@
+
+‘
+java:S1104	"UMake className a static final constant or non-public and provide accessors if needed.(¾ü±J$469bb407-9b45-400a-a84f-0bed56cfdcdd
+
+java:S1104
+"RMake method a static final constant or non-public and provide accessors if needed.(ïˆJ$a84debe8-ddec-4f13-8859-b473af725a41
+
+java:S1104"SMake argType a static final constant or non-public and provide accessors if needed.(Şù•ÑJ$bd6011c3-2965-4d3a-ba67-7c05d61a1448
+Œ
+java:S1104"PMake args a static final constant or non-public and provide accessors if needed.(à‘ ĞJ$9d3da042-5552-4dd1-b030-a0d5a102f902
+b
+java:S1948"&Make "args" transient or serializable.(à‘ ĞJ$24e76166-e776-4c2b-bbce-a7849e33b6fe
+i
+java:S1128"(Remove this unused import 'lombok.Data'.(÷í«ÿÿÿÿÿJ$d3de6b5d-7078-408a-9020-b29baffba4c0

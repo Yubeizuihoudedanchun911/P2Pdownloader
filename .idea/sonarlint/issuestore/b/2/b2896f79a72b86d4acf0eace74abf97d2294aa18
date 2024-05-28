@@ -1,0 +1,21 @@
+
+Q
+java:S3740:"/Provide the parametrized type for this generic.(êÀêÜøÿÿÿÿ8ØğïÕù1
+Q
+java:S3740D"/Provide the parametrized type for this generic.(ÑÃ¢„şÿÿÿÿ8ÙğïÕù1
+‘	java:S117'"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿó£àşÿÿÿÿJ$21fd3c0a-526f-4d1d-9476-4c6a9bc450bd
+x
+java:S2629K"7Use the built-in formatting to construct this argument.(‹‰ëüÿÿÿÿJ$45db0ef5-b57c-4382-abf6-fc4db1ffb973
+x
+java:S2629N"7Use the built-in formatting to construct this argument.(‹‰ëüÿÿÿÿJ$565410b8-ad3e-4cc3-8ba7-57bd30c661bc
+i
+java:S5411I"(Use a primitive boolean expression here.(ıü‡ÌûÿÿÿÿJ$551fc5a2-47bc-4f81-8615-c6af75c05061
+|	java:S125"<This block of commented-out lines of code should be removed.(ÍëÇÅıÿÿÿÿJ$cfe9e0d5-0897-454e-b20d-b2538b934139
+|	java:S125 "<This block of commented-out lines of code should be removed.(ªÿıÿÿÿÿJ$fb89b6bd-534b-4cc7-8ebe-5d944e231f00
+š
+java:S2142)"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€J$7f4db883-5e93-4313-a9bf-46a6256b5955
+‚
+java:S3457K"AFormat specifiers should be used instead of string concatenation.(‹‰ëüÿÿÿÿJ$6723fd6f-df7c-40ae-b0f4-50d2d8c72f40
+‚
+java:S3457N"AFormat specifiers should be used instead of string concatenation.(‹‰ëüÿÿÿÿJ$fd744dc7-ff0f-4b08-8293-3a42846a87f1
+>	java:S131\""Add a default case to this switch.(¦ÈñÎ8ığïÕù1

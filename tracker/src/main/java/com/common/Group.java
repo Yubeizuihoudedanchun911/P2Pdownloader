@@ -1,11 +1,12 @@
 package com.common;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-public class Group {
+public class Group implements Comparable<Group> {
     private Set<Node> online_nodes;
     private String groupID;
 
@@ -59,5 +60,10 @@ public class Group {
     @Override
     public int hashCode() {
         return Objects.hash(online_nodes, groupID);
+    }
+
+    @Override
+    public int compareTo(Group o) {
+        return this.online_nodes.size() - o.online_nodes.size();
     }
 }

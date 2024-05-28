@@ -1,0 +1,5 @@
+
+·
+java:S1319="{The return type of this method should be an interface such as "List" rather than the implementation "CopyOnWriteArrayList".(ý““ˆJ$eff26eb0-fe35-4eab-b358-d78e37a18853
+´
+java:S1319A"xThe type of "sliceInfoList" should be an interface such as "List" rather than the implementation "CopyOnWriteArrayList".(ŽÏÂÞJ$cb87231b-7e7e-46ed-8316-00d19b3347bd

@@ -1,0 +1,11 @@
+
+J
+java:S3740"/Provide the parametrized type for this generic.(ØŽâáûÿÿÿÿ
+E	java:S106("+Replace this use of System.out by a logger.(›–…Úúÿÿÿÿ
+@	java:S1066"+Replace this use of System.out by a logger.(¥¢ôö
+O
+java:S22747":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM
+E	java:S106@"+Replace this use of System.out by a logger.(ÂÃ¸§ùÿÿÿÿ
+\
+java:S1075A"ARefactor your code to get this URI from a customizable parameter.(ÞÉ¥âþÿÿÿÿ
+?	java:S106Q"+Replace this use of System.out by a logger.(ùø¼

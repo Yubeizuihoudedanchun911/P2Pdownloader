@@ -1,0 +1,9 @@
+
+L
+java:S2696)"6Make the enclosing method "static" or remove this set.(çô¾œ
+Q
+java:S1854."6Remove this useless assignment to local variable "cf".(Ÿá©Íøÿÿÿÿ
+t
+java:S2142/"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€
+B
+java:S1481."'Remove this unused "cf" local variable.(Ÿá©Íøÿÿÿÿ

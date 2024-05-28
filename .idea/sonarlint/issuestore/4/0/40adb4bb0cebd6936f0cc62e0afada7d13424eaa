@@ -1,0 +1,75 @@
+
+s
+java:S3740ƒ"/Provide the parametrized type for this generic.(”ú¿•8“ Øù1J$356eaebd-784b-41ee-a6fe-31f236ff772b
+x
+java:S3740„"/Provide the parametrized type for this generic.(æ°ìşÿÿÿÿ8“ Øù1J$54bf8206-2d4b-41d3-809e-d8863f87a979
+x
+java:S3740…"/Provide the parametrized type for this generic.(»ı×µüÿÿÿÿ8“ Øù1J$aec1febb-8836-4307-99d3-f2a6368457a5
+s
+java:S3740"/Provide the parametrized type for this generic.(Ó»¤‘8“ Øù1J$ea363dd1-738b-4303-bf9e-efd9ba4ea700
+x
+java:S3740¬"/Provide the parametrized type for this generic.(²ç“Ûúÿÿÿÿ8” Øù1J$fce99364-4131-4b0b-8949-a84ca83bf8b5
+s
+java:S3740Ì"/Provide the parametrized type for this generic.(ş´Õü8” Øù1J$54f6a9fc-96cb-4cf8-b16b-21d02dd676ed
+x
+java:S3740ã"/Provide the parametrized type for this generic.(¬¸îüıÿÿÿÿ8” Øù1J$93120e44-698b-422f-8ce1-cc9c507f0c17
+s
+java:S3740ù"/Provide the parametrized type for this generic.(æü–Ê8” Øù1J$b09d1975-a30e-4faf-9574-68f661a8ab35
+s
+java:S3740¾"/Provide the parametrized type for this generic.( æÜÃ8” Øù1J$c2696b6b-4b91-49dd-b938-f55799c64daa
+š
+java:S2293p"YReplace the type specification in this constructor call with the diamond operator ("<>").(Šô½¬øÿÿÿÿJ$613a82dd-ae15-41ce-af1c-e09c6af12fa5
+’	java:S117‰"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ãşé¡úÿÿÿÿJ$e2f45772-9306-4f53-a24b-2f0256001fd1
+
+java:S1301Ğ"KReplace this "switch" statement by "if" statements to increase readability.(Ï—íàıÿÿÿÿJ$1ca683d3-3412-407c-8fc0-4230033a2f8f
+§
+java:S1488Æ"eImmediately return this expression instead of assigning it to the temporary variable "slicePageInfo".(ñ‹¶­ùÿÿÿÿJ$ad43e42d-6e97-4cf2-9817-b881d6a8e8e6
+œ
+java:S1104:"[Make taskListenerMap a static final constant or non-public and provide accessors if needed.(÷ÑœÅüÿÿÿÿJ$efb9d788-9456-4053-8d3b-2995f090c7b4
+{
+java:S2629‡"7Use the built-in formatting to construct this argument.(ÛĞ¥Û8™ Øù1J$fd6c80c4-c20d-4c82-a533-9876e2e5a686
+€
+java:S2629—"7Use the built-in formatting to construct this argument.(Ÿå¸üÿÿÿÿ8™ Øù1J$75fbff21-0229-4339-8707-02212f6185a0
+s
+java:S2629í"7Use the built-in formatting to construct this argument.(Ë¶Š]J$0b620e83-a0f2-4381-b7bf-3f6be8cc4154
+’
+java:S2095È"NUse try-with-resources or close this "FileOutputStream" in a "finally" clause.(Ç»Í˜8Ü Øù1J$47f57ea8-b12d-433e-8d40-b473f1c256be
+~
+java:S1854_"=Remove this useless assignment to local variable "rpcClient".(÷¾¼îüÿÿÿÿJ$f6b49319-a71f-40b9-9f29-9c60f9823281
+w	java:S125]"<This block of commented-out lines of code should be removed.(ÀœŞÖJ$5104cba7-0992-4e07-b865-a932d255c1ea
+o
+java:S1481_".Remove this unused "rpcClient" local variable.(÷¾¼îüÿÿÿÿJ$8d272bcc-ce5f-4fe8-9fb7-0fe4562cf417
+”
+java:S1602p"SRemove useless curly braces around statement and then remove useless return keyword(Šô½¬øÿÿÿÿJ$ccfa23d4-13df-4604-9827-388613d6c104
+…
+java:S3457‡"AFormat specifiers should be used instead of string concatenation.(ÛĞ¥Û8é Øù1J$7b5701e7-6da4-4800-ab63-aeb515ff545e
+}	java:S125†"<This block of commented-out lines of code should be removed.(ÑÚ˜ÒüÿÿÿÿJ$3c67255e-7d96-49a3-93ac-e9211d88802b
+w	java:S125"<This block of commented-out lines of code should be removed.(Ê§èJ$ad2dd5b7-f8e1-416a-9ec9-df90b4bca372
+Š
+java:S3457—"AFormat specifiers should be used instead of string concatenation.(Ÿå¸üÿÿÿÿ8ë Øù1J$5db9d594-ffff-4161-9e5a-3fb7fdfbddac
+‚
+java:S2147µ"ECombine this catch with the one at line 179, which has the same body.(ï­£ÄJ$80a7e5c5-3020-45b0-9f08-372e859a3b1e
+…
+java:S3457®"AFormat specifiers should be used instead of string concatenation.(¶‹ß8í Øù1J$67cc7752-321c-4555-aa8d-aa84a823a943
+|	java:S899°";Do something with the "boolean" value returned by "delete".(ÓæµèıÿÿÿÿJ$9322070c-439b-435e-ab4e-44a5fdc44e7d
+
+java:S4042°"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(ÓæµèıÿÿÿÿJ$3125680e-921e-46ce-9bea-dd30945595c5
+}	java:S125¾"<This block of commented-out lines of code should be removed.(˜×æ‘üÿÿÿÿJ$77aeed81-d119-4833-8c04-436e8f6a653e
+c	java:S131Ğ""Add a default case to this switch.(Ï—íàıÿÿÿÿJ$92bda225-0127-4b80-a51e-12ab411d782e
+i
+java:S1602ä",Remove useless curly braces around statement(¥—ığJ$a30977de-42e2-4b71-aa47-ed0b59fc1778
+}
+java:S3457í"AFormat specifiers should be used instead of string concatenation.(Ë¶Š]J$d17efb81-cdd0-416d-98be-0b6c5d2b8343
+i
+java:S1602ú",Remove useless curly braces around statement(¥—ığJ$91266f13-8ac6-45a0-a987-9924153601b5
+	java:S116ƒ"TRename this field "file_name" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Û°ãœJ$813a8176-f47c-4856-9f01-b6e28770f2fc
+c
+java:S1170†"!Make this final field static too.(ÍªµÍÿÿÿÿÿJ$769fd811-816b-4854-ac95-ed3b54859ea5
+c
+java:S3077‚"&Use an "AtomicReferenceArray" instead.(Íµ­÷J$1a96ed37-2d7b-4a94-93e3-08dab21825b6
+›
+java:S2142•"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€J$d17514e8-975a-43b2-8ab3-8c54ea9ea9dc
+ƒ
+java:S3457š"AFormat specifiers should be used instead of string concatenation.(ÕÁÈ‰øÿÿÿÿJ$8102bd17-aba3-488c-8c7f-341f34deafcb
+‚
+java:S2147Ù"ECombine this catch with the one at line 343, which has the same body.(ï­£ÄJ$48bd2f57-699f-43af-8afe-0cb7ca7b1810

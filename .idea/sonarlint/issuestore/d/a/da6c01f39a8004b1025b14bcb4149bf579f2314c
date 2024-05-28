@@ -1,0 +1,13 @@
+
+“	java:S127X"XRefactor the code in order to not assign to this loop counter from within the loop body.(‹Î§‰J$e4ee4899-6307-41aa-b55d-d676b8bcd3f4
+q
+java:S1143b"5Remove this return statement from this finally block.(§¼ÉçJ$597d2b3c-1d17-4413-9c50-5df4ad86a348
+v
+java:S1118":Add a private constructor to hide the implicit public one.(Õ¬™ÖJ$4fc53d70-7f72-4a3f-8d87-b744f3db8bd7
+
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(ÕÉĞŸJ$ef447964-a1e6-4349-9764-82f286584e1a
+Š
+java:S4042["NUse "java.nio.file.Files#delete" here for better messages on error conditions.(äñ¤ùJ$874c3146-d2b6-4037-adaf-cb706ecb32b6
+{	java:S899\";Do something with the "boolean" value returned by "delete".(²Œ­ûÿÿÿÿJ$9e62d101-d969-42f3-99a1-68cf0329ef16
+
+java:S4042\"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(²Œ­ûÿÿÿÿJ$92bb1e97-36d7-4162-9421-551a9d6ece89

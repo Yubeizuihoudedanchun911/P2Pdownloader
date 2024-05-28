@@ -1,25 +1,28 @@
 package com.com.raft.common;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.com.api.DownLoadCenterimpl;
 import com.com.api.DownloadCenter;
-import com.com.raft.state.Candidate;
-import com.com.raft.state.Leader;
-import com.com.raft.state.State;
-import com.com.rpc.RPCProxy;
 import com.com.raft.entity.HeapPoint;
 import com.com.raft.entity.LogEntry;
 import com.com.raft.entity.VoteEntity;
+import com.com.raft.state.Candidate;
 import com.com.raft.state.Follower;
+import com.com.raft.state.Leader;
+import com.com.raft.state.State;
+import com.com.rpc.RPCProxy;
 import com.com.rpc.client.RpcClient;
 import com.com.rpc.protocal.CommandType;
 import com.com.rpc.protocal.GroupEntry;
@@ -33,18 +36,18 @@ import io.netty.channel.ChannelFuture;
 public class RaftNode {
     private String name;
     private State state;
-    private Set<Node> nodeSet;
+    private volatile Set<Node> nodeSet;
     private Node me;
     private StateMachine stateMachine;
     private RpcNettyServer server;
     private RpcClient client;
     private DownloadCenter downloadCenter;
-    private Node leader;
+    private volatile Node leader;
     private Map<Node, HeapPoint> taskMap;
     private Thread downloadReqSender;
     private Thread initConfigSender;
     private Object lock; // download sender lock
-    private Object init_lock; // ger init config lock
+    private ReentrantLock init_lock; // get init config lock
     private final Node tracker = new Node("localhost", 912);
     private String groupID;
     private List<Node> disConnectNodes;
@@ -146,13 +149,6 @@ public class RaftNode {
         this.lock = lock;
     }
 
-    public Object getInit_lock() {
-        return init_lock;
-    }
-
-    public void setInit_lock(Object init_lock) {
-        this.init_lock = init_lock;
-    }
 
     public Node getTracker() {
         return tracker;
@@ -192,23 +188,18 @@ public class RaftNode {
         initConfigSender = new Thread(() -> {
             Request req = new Request(CommandType.REQ_JOIN_TO_TRACKER, me, null);
             send(tracker, req);
-            synchronized (init_lock) {
-                try {
-                    init_lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                taskMap = new ConcurrentHashMap<>();
-                for (Node node : nodeSet) {
-                    HeapPoint heapPoint = new HeapPoint(node, 0);
-                    taskMap.put(node, heapPoint);
-                }
-                Request request = new Request(CommandType.NOTICE_GROUPNODES_ONLINE, me, null);
-                nodeOlineMsgSend();
-                state = new Follower(this);
-
+            while (CollectionUtils.isEmpty(nodeSet));
+            taskMap = new ConcurrentHashMap<>();
+            for (Node node : nodeSet) {
+                HeapPoint heapPoint = new HeapPoint(node, 0);
+                taskMap.put(node, heapPoint);
             }
-        });
+            Request request = new Request(CommandType.NOTICE_GROUPNODES_ONLINE, me, null);
+            nodeOlineMsgSend();
+            state = new Follower(this);
+
+        }
+        );
 
         initConfigSender.start();
 
@@ -224,7 +215,7 @@ public class RaftNode {
         server = new RpcNettyServer(me.getPort());
         client = new RpcClient();
         lock = new Object();
-        init_lock = new Object();
+        init_lock = new ReentrantLock();
         downloadCenter = new DownLoadCenterimpl(this);
         RPCProxy.rpcMap = new ConcurrentHashMap<>();
         RPCProxy.rpcMap.put(DownloadCenter.class.getName(), downloadCenter);
@@ -293,14 +284,11 @@ public class RaftNode {
     }
 
     public void get_config(Request request) {
-        synchronized (init_lock) {
 
-            GroupEntry configEntry = JSON.parseObject(request.getObj().toString(), GroupEntry.class);
-            nodeSet = configEntry.getNodes();
-            nodeSet.add(me);
-            groupID = configEntry.getGroupID();
-            init_lock.notify();
-        }
+        GroupEntry configEntry = JSON.parseObject(request.getObj().toString(), GroupEntry.class);
+        nodeSet = configEntry.getNodes() == null ? Collections.emptySet() : configEntry.getNodes() ;
+        nodeSet.add(me);
+        groupID = configEntry.getGroupID();
         log.info("node online " + nodeSet);
     }
 

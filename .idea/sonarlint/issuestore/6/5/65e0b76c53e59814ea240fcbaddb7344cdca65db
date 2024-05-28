@@ -1,0 +1,27 @@
+
+’	java:S117›"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ëù‚ÇÿÿÿÿÿJ$9f456e49-85ea-4138-9df3-ae9170c7ae39
+”	java:S1161"TRename this field "init_lock" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿşçŠüÿÿÿÿJ$03e24793-43eb-4ef2-b992-b9d6f17837e6
+	java:S100—"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(âœÈ¦ÿÿÿÿÿJ$949e0036-74c2-46bf-b566-f08be4ac26d1
+	java:S100›"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ëù‚ÇÿÿÿÿÿJ$f84e8eec-f9d9-4656-96f8-264333ac3be2
+Š	java:S100Á"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¿ÿÓîJ$73a71ff0-043a-46be-80aa-c591b7ea5681
+›
+java:S2142È"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€J$be43a5d7-27fe-4281-8040-852b693035ac
+|
+java:S2274Ç":Remove this call to "wait" or move it into a "while" loop.(«óŞêûÿÿÿÿJ$7f5ddd8b-1c15-4018-8d2b-113aefec51b8
+i
+java:S1481Ğ",Remove this unused "request" local variable.(İÌ¿J$ccc852a6-8bb5-4051-b191-f8df5415eccb
+ˆ	java:S128Š"LEnd this switch case with an unconditional break, return or throw statement.(Éü¬©J$8f1018ab-5924-47d3-887d-f720589b2a3e
+}	java:S125"<This block of commented-out lines of code should be removed.(†¶¨ÿÿÿÿÿJ$9f08533a-f897-4c48-9c0d-7de548eba840
+	java:S100©"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(İìùÿÿÿÿJ$2a37bac8-d57d-4f35-9cb9-62df0c636d15
+m
+java:S2446°"0"notify" may not wake up the appropriate thread.(ª°«J$9498e3be-e33b-4af5-9fbc-60a7549cf011
+^
+java:S1116Ğ"Remove this empty statement.(Åñ­õşÿÿÿÿJ$d1a6749a-8382-47f0-8747-4c3743e27502
+	java:S100ë"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(»³Ä¿şÿÿÿÿJ$baed5377-534f-4a4f-a81a-7cb94eb4ca67
+	java:S100ò"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸áÉÇÿÿÿÿÿJ$28c0dd9d-cfbe-41ad-93ca-dad93d2b817e
+›
+java:S2142ƒ"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€J$30da62eb-a9bb-4b8c-badd-fc21af54ce18
+w
+java:S2274":Remove this call to "wait" or move it into a "while" loop.(ŒºÙJ$18c9d9e5-0484-4c5f-a851-b9f2dafaff4e
+m
+java:S2446"0"notify" may not wake up the appropriate thread.(ŒâÌ†J$6ad12002-e3b3-4ca3-a5ec-f782b9ebef2e

@@ -1,0 +1,10 @@
+
+w
+java:S2629"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(ë•žŒøÿÿÿÿ
+	java:S116"eRename this field "DEFUALT_HEARTBEAT_INTERVAL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒí·°üÿÿÿÿ
+<
+java:S1170"!Make this final field static too.(ƒí·°üÿÿÿÿ
+\
+java:S3457"AFormat specifiers should be used instead of string concatenation.(ë•žŒøÿÿÿÿ
+t
+java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ý¾
